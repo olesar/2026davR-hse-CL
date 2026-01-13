@@ -1,0 +1,559 @@
+---
+title: Mixed-effects linear models
+author: "Ilya Schurov, Olga Lyashevskaya, George Moroz, Alla Tambovtseva"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+Course: Linguistic data: Quantitative Analysis and Visualisation
+
+## Linear mixed-effects models
+
+```{r}
+install.packages("lme4")
+library(tidyverse)
+library(lme4)
+library(lmerTest) # for the model summary
+library(skimr) # just for summaries
+```
+
+
+### Dataset A
+
+The data set `ReductionRussian.txt` is based on Pavel Duryagin's study of the perception of vowel reduction in Russian language. The data set includes the following variables:
+
+* `time1`: reaction time 1;
+* `time2`: reaction time 2;
+* `duration`: duration of the vowel in the stimuly (in milliseconds, ms);
+* `f1`: the first formant (if don't know about formants, see [here](https://home.cc.umanitoba.ca/~krussll/phonetics/acoustic/formants.html));
+* `f2`: the second formant;
+* `f3`: the third formant;
+* `vowel`: vowel type.
+
+Vowel classified according the 3-fold classification (`A` - a under stress, `a` - a/o as in the first syllable before the stressed one, `y` (stands for *shva*) - a/o as in the second etc. syllable before the stressed one or after the stressed syllable, cf. *g[y]g[a]t[A]l[y]*, *gogotala*, ‘guffawed’).
+
+Our goal for today is to understand how the first formant depends on the values of the second formant and whether this relationship is different for different types of vowels. 
+
+Let us load this data set from the txt-file using `read.table()` function. Please, note that we should add the option `header=TRUE` to tell R that the first row should be read as a row with column names.
+
+```{r}
+sh <- read.table("https://raw.githubusercontent.com/olesar/2023dav4compling/main/data/duryagin_ReductionRussian.txt", header=TRUE)
+```
+
+Look at the summary of our data and make sure all variables have correct types:
+
+```{r}
+summary(sh$f2)
+```
+
+As we will work with mixed-effects models, it is important to understand how many rows with missing values our data frame has (mixed-effects models work correctly when the ratio of NA's is small).
+
+Let's count rows with missing values:
+
+```{r}
+sum(!complete.cases(sh))
+```
+
+As we see, no rows with missing values are detected, we can go on.
+
+Let us visualize the relationship between `f1` and `f2`:
+
+```{r}
+sh %>% 
+  ggplot(aes(f2, f1)) +
+  geom_smooth(method="lm") +
+  geom_point() +
+  theme_minimal()
+```
+
+This scatter plot is interesting. On the one hand, the relationship between `f1` and `f2` is negative: the higher are the values of `f2`, the lower the values of `f1` are.  On the other hand, if we take a closer look, we will see that there are different groups of points, and the relationship between `f1` and `f2` can be different as well. Now let us add grouping by vowels to this graph:
+
+```{r}
+ggplot(data = sh, aes(x = f2, y = f1, color = vowel)) + geom_point()
+# use color = ... as an attribute of aes()
+ggplot(data=sh, aes(f2, f1, color=vowel)) +
+  geom_smooth(method="lm") +
+  geom_point() +
+  theme_minimal()
+```
+
+Now we can see that there are three different clusters, three groups of points that go one by one from the top to the bottom. If we try to add regression lines to all these clouds of points separately, the intercept will be certainly different, but slopes will be approximately the same. We can check it calculating correlation coefficients by groups:
+
+```{r}
+# cor() can be written inside summarise()
+sh %>%
+  group_by(vowel) %>%
+  summarise(cor(f2, f1))
+```
+
+Correlation coefficients are quite low, not very different.
+
+If you need correlation coefficients by groups with p-values, you can get them as well using cor.test(...)$estimate and cor.test(f1, f2)$p.value:
+
+```{r}
+sh %>%
+  group_by(vowel) %>%
+  summarise(cor.test(f2, f1)$estimate)
+
+sh %>%
+  group_by(vowel) %>%
+  summarise(cor.test(f2, f1)$p.value)
+```
+
+All correlation coefficients are insignificant at the 5% level of significance (and at any common significance level).
+
+### Ordinary linear regression
+
+Now we can proceed to regression models. Let us start with a simple linear model. Fit a `lm` model `f1 ~ f2`:
+
+```{r}
+sm <- lm(f1 ~ f2, data = sh)
+summary(sm)
+```
+
+
+
+$$f_1 = \beta_0 + \beta_1 f_2$$
+
+Revise an interpretation. 
+
+**Interpretation:** the effect of the second formant on the first formant is statistically significant at the 5% (and even 0.1%) level of significance, we reject the null hypothesis about the coefficient equal to zero. If `f2` increases by one Hz, `f1` decreases by 0.78 on average.
+
+We can add a regression line to our scatterplot:
+
+```{r}
+
+```
+
+### Linear regression with categorical predictor
+
+Now let's fit a model with a categorical (factor, qualitative) predictor, vowel group.
+
+```{r}
+sm_dummy <- lm(f1 ~ vowel, data = sh)
+summary(sm_dummy)
+
+sm3 <- lm(f1 ~ f2 + vowel, data = sh)
+summary(sm3)
+```
+$$f1 = \beta_0 + \beta_1 f_2 +\beta_{2.A} A + \beta_{2.y} y   $$
+A = 0, 1
+y = 0, 1
+
+Why this model is different from the previous one? Now the coefficient of `f2` is positive! So, if we consider grouping, the effect of the second formant is not definitely negative. Moreover, it is insignificant. Hence, the predicted (average) value of the first formant mainly depends on the vowel group.
+
+The equation of this model is the following:
+
+$$
+\text{f1} = 477.30 + 0.07 \times \text{f2} + 137.78 \times \text{vowelA} - 121.63 \times \text{vowely}
+$$
+The factor variable `vowel` is split in a set of dummy variables:
+
+* `vowela`: 1 if the word contains the first type vowel, 0 otherwise;
+* `vowelA`: 1 if the word contains the second type vowel, 0 otherwise;
+* `vowely`: 1 if the word contains the third type vowel, 0 otherwise.
+
+Why do we have only two groups of vowels? The first one is taken as a base category and ommited (it usually happens so the model can be estimated). A base category is a reference group, one we compare other groups with. Thus, judging by equation, we can say that: 1) the average value of `f1` is higher by 137.78 for cases with `vowelA` type of vowel than for cases with `vowela` type of vowel; 2) the average value of `f1` is lower by 121.63 for cases with `vowely` type of vowel than for cases with `vowela` type of vowel.
+
+### Linear mixed-effects model
+
+$$f_1 = \beta_0 + \beta_1 vowel + u   $$
+
+Now let us fit a new type of a model, a linear mixed-effects model with a random effect on the intercept for groups based on vowel type. So as to do this, we will need the library `lme4`.
+
+Fit a model:
+
+```{r, message=FALSE, warning=FALSE}
+me <- lmer(f1 ~ f2 + (1|vowel), data=sh, REML = FALSE) # model with random intercept
+summary(me)
+# ICC - intraclass correlation
+# ICC = 16741 / (16741 + 2794)
+16741 / (16741 + 2794)
+library(performance)
+performance::icc(me)
+```
+
+Notes: 
+
+1. We add a random effect on the intercept for different vowel type, so we write `(1|vowel)`. Such a syntax with pipes (`|`) is usually used in mixed-effects models in R.
+
+2. We could safely skip the option `REML = FALSE`. There are two basic methods of estimating mixed-effects models in R, maximum likelihood method (ML) and restricted maximum likelihood method (REML). REML is used by default as a more general one, but we can turn it off and use a simple ML method, especially if our groups are balanced (approx. of the same size) (recommended in old textbooks).
+
+Get the summary of this model (using either `lmer` or `lmerTest` packages).
+
+```{r}
+
+
+```
+**Interpretation:**
+
+1. First, we see some measures of model quality, for example, Akaike information criterion (AIC) and Bayesian information criterion (BIC). It is useless to interpret the AIC as is, we can only compare AICs of two models and choose one that has a lower AIC (if it is substantially correct, of course).
+
+2. Then, we have some statistics on the random effects we added. There is the variance of the intercept and the variance of residuals. We can calculate the share of variance that is explained by random effects on groups:
+P
+$$
+\text{ICC} = \frac{11103}{11103 + 2777} = 0.799
+$$
+This measure is called *intraclass correlation (ICC)* and shows whether the random effects we added on groups are really needed. In other words, how much of the variance of the dependent variable is expained by grouping. If ICC is very close to zero, it means that random effects are not really needed, we can safely use a more simple, an ordinary regression model. In our case this share is high, so it is sensible to use different intercepts for different groups in our model.
+
+We can also calculate ICC using the `icc()` function from the `sjstats` library:
+
+```{r, message=FALSE, warning=FALSE}
+library(performance)
+icc(me) # the same
+```
+
+3. Coefficients from the *Fixed effects* part can be used as ordinary coefficients of independent variables in linear models. They are computed taking into account the differences between groups, so the coefficient of `f2` is not drastically different from one from the model with dummy variables for vowel types above, but different from one from the very first simple model.
+
+We can write an equation of this model:
+
+$$
+\text{f1} = 492.60 + 0.06  \times \text{f2}
+$$
+Now let's visualise the results and add a regression line for each group of vowels to the scatter plot:
+
+```{r}
+#
+
+
+```
+
+As we see, slopes are approximately the same, but intercepts are different.
+
+### 
+```
+Resp    x   y
+A       1   5
+B       2   6
+C       3   7
+D       4   8
+```
+y ~ x
+
+$$y = 5 + 0PP \times x + 1 \times B + 2 \times C + 3 \times D + \epsilon $$
+
+### UPSID Dataset
+
+
+In this dataset we have number of consonants and vowels in 402 languages collected from UPSID database (http://www.lapsyd.ddl.ish-lyon.cnrs.fr/lapsyd/). There is an variable of the area based on Glottolog (http://glottolog.org/). In this part we will try to make models that predict number of vowels by number of consonants.
+
+```{r, warning= FALSE}
+upsid <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_data_analysis_for_linguists/master/data/upsid.csv")
+upsid
+summary(upsid)
+```
+
+```{r}
+upsid %>% 
+  ggplot(aes(consonants, vowels))+
+  geom_point(alpha = 0.4)+
+  labs(x = "number of consonants",
+       y = "number of vowels",
+       caption = "data from LAPSyD")+
+  theme_bw()
+```
+
+Plot confidence ellipsis for each `area`:
+
+```{r}
+upsid %>% 
+  ggplot(aes(consonants, vowels, color = area))+
+  geom_point()+
+  labs(x = "number of consonants",
+       y = "number of vowels",
+       caption = "data from LAPSyD")+
+  theme_bw()+
+  stat_ellipse()
+```
+
+Fit simple linear regression and add the line to the plot:
+
+```{r}
+fit1 <- lm(vowels~consonants, data = upsid)
+summary(fit1)
+upsid %>% 
+  ggplot(aes(consonants, vowels))+
+  geom_point()+
+  labs(x = "number of consonants",
+       y = "number of vowels",
+       caption = "data from LAPSyD")+
+  theme_bw()+
+  geom_line(data = fortify(fit1), aes(x = consonants, y = .fitted), color = "blue")
+fit2 <- lmer(vowels ~ consonants + (1|area), data = upsid)
+summary(fit2)
+upsid %>% 
+  ggplot(aes(consonants, vowels))+
+  geom_point()+
+  labs(x = "number of consonants",
+       y = "number of vowels",
+       caption = "data from LAPSyD")+
+  theme_bw() +
+  geom_line(data = fortify(fit2), aes(x = consonants, y = .fitted, color = area))
+```
+
+If we assume that random effects are correlated:
+
+```{r}
+fit3 <- lmer(vowels ~ consonants + (1+consonants|area), data = upsid)
+summary(fit3)
+upsid %>% 
+  ggplot(aes(consonants, vowels))+
+  geom_point()+
+  labs(x = "number of consonants",
+       y = "number of vowels",
+       caption = "data from LAPSyD")+
+  theme_bw()+
+  geom_line(data = fortify(fit3), aes(x = consonants, y = .fitted, color = area))
+fit4 <- lmer(vowels ~ consonants + (0+consonants|area), data = upsid)
+summary(fit4)
+upsid %>% 
+  ggplot(aes(consonants, vowels))+
+  geom_point()+
+  labs(x = "number of consonants",
+       y = "number of vowels",
+       caption = "data from LAPSyD")+
+  theme_bw()+
+  geom_line(data = fortify(fit4), aes(x = consonants, y = .fitted, color = area))
+```
+
+
+If we assume that random effects are not correlated:
+
+```{r}
+fit5 <- lmer(vowels ~ consonants + (1|area) + (0+consonants|area), data = upsid)
+summary(fit5)
+upsid %>% 
+  ggplot(aes(consonants, vowels))+
+  geom_point()+
+  labs(x = "number of consonants",
+       y = "number of vowels",
+       caption = "data from LAPSyD")+
+  theme_bw()+
+  geom_line(data = fortify(fit5), aes(x = consonants, y = .fitted, color = area))
+anova(fit5, fit4, fit3, fit2, fit1)
+```
+
+
+### Portugal studies
+
+The [dataset](https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/student_g1.csv) addresses student achievement in secondary education of two schools in Portugal:
+* `school` - binary, GP (Gabriel Pereira) and MS (Mousinho da Silveira)
+* `studytime` - weekly study time (numeric: 1 - less than 2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, 4 - 10+ hours)
+* `gender` - binary, F and M
+* `G1` - 1st period grade 
+(see the full dataset on [Kaggle](https://www.kaggle.com/dipam7/student-grade-prediction)). 
+
+Plot the following graph using `geom_smooth()` with the argument `se = FALSE`:
+
+```{r, echo=FALSE, message=FALSE}
+stud <- read.csv("https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/student_g1.csv")
+stud %>% skimr::skim()
+stud %>% 
+  ggplot(aes(x = studytime, y= G1, color = gender))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)+
+  facet_wrap(~school, scales = "free") +
+  theme_bw()
+```
+
+Fit two models with random intercept and random intercept and slope for `school`, where `G1` - predicted variable, `studytime` and `gender` - fixed effects:
+
+```{r, echo = FALSE}
+f1 <- lmer(G1 ~ studytime + gender + (1|school), data = stud)
+stud %>% 
+  ggplot(aes(studytime, G1, color = gender))+
+  geom_point()+
+  facet_wrap(~school, scales = "free")+
+  geom_line(data = fortify(f1), aes(x = studytime, y = .fitted, color = gender))
+f2 <- lmer(G1 ~ studytime + gender + (1+studytime + gender|school), data = stud)
+stud %>% 
+  ggplot(aes(studytime, G1, color = gender))+
+  geom_point()+
+  facet_wrap(~school, scales = "free")+
+  geom_line(data = fortify(f2), aes(x = studytime, y = .fitted, color = gender))
+```
+
+Provide the value of the smaller `AIC`.
+
+```{r, results= 'asis', echo = FALSE}
+library(checkdown)
+autocheck_question(2061.944)
+```
+
+
+
+
+
+### More on the assumptions of the models
+
+
+#### Lexical decision task dataset
+
+This data set contains 100 randomly selected words from the English Lexicon Project data (Balota et al. 2007), their lengths, mean reaction times, and corpus frequencies. 
+Dataset and description from [Rling package by Natalia Levshina](https://benjamins.com/sites/z.195/content/package.html). 
+
+```{r, message=FALSE, warning=FALSE}
+ldt <- read_csv("https://goo.gl/ToxfU6")
+ldt
+```
+
+### 1. Non-linearity of relationship
+
+Let us look at the simple graph:
+
+```{r}
+ldt %>% 
+  ggplot(aes(Mean_RT, Freq))+
+  geom_point()+
+  theme_bw()
+```
+
+Linear regression on such raw data will not be informative:
+
+```{r}
+ldt %>% 
+  ggplot(aes(Mean_RT, Freq))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  theme_bw()
+m1 <- summary(lm(Mean_RT~Freq, data = ldt))
+m1
+```
+
+#### 1.1 Log-transformation
+
+Let us log-transform the corpus Frequencies:
+
+```{r}
+ldt %>% 
+  ggplot(aes(Mean_RT, log(Freq)))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  theme_bw()
+ldt %>% 
+  ggplot(aes(Mean_RT, log(Freq+1)))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  theme_bw()
+m2 <- summary(lm(Mean_RT~log(Freq+1), data = ldt))
+m2
+m1$adj.r.squared
+m2$adj.r.squared # the more R2, the better
+```
+
+The dependent variable can also be log-transformed:
+
+```{r}
+ldt %>% 
+  ggplot(aes(log(Mean_RT), log(Freq  + 1)))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  theme_bw()
+m3 <- summary(lm(log(Mean_RT)~log(Freq+1), data = ldt))
+m1$adj.r.squared
+m2$adj.r.squared
+m3$adj.r.squared
+```
+
+How to interpret the estimates of the model with to log-transformed variables?
+
+In simple linear regression we look at the relationship between $x$ и  $y$:
+$$y_i = \beta_0+\beta_1\times x_i$$
+
+How will $y_j$ change if we increase $x$ by one? ($x_i + 1 = x_j$)
+$$y_j = \beta_0+\beta_1\times x_j$$
+
+$$y_j - y_i = \beta_0+\beta_1\times x_j - (\beta_0+\beta_1\times x_i)  = \beta_1(x_j - x_i)$$
+
+i.e $y$ will increase by $\beta_1$ if $x$ will increase by 1. 
+
+What happens with the log-transformed variables? 
+If $x_i + 1 = x_j$ then
+
+$$\log(y_j) - \log(y_i) = \beta_1\times (\log(x_j) - \log(x_i))$$
+
+$$\log\left(\frac{y_j}{y_i}\right) = \beta_1\times \log\left(\frac{x_j}{x_i}\right) = \log\left(\left(\frac{x_j}{x_i}\right) ^ {\beta_1}\right)$$
+
+$$\frac{y_j}{y_i}= \left(\frac{x_j}{x_i}\right) ^ {\beta_1}$$
+
+i. e. $y$ will increase by $\beta_1$ % if $x$ will increase by 1 %.
+
+Log-transformation is not the only possible mean of linearizaion.
+
+* Tukey's ladder of power
+
+<img src = "https://www.statisticshowto.com/wp-content/uploads/2015/08/tukey-ladder-of-powers.png">
+
+John Tukey (1977) suggested a visual building rule to promote linearity. Visually divide your observations into three groups along the X axis containing the same number of observations ("thirds"). In each of the thirds image a reference point (center) corresponding to the cross-median (intersection of the median of the x and median of the y values). Visually add half lines, i.e. draw a line through the first and second, and and another through the second and third reference point.
+Imagine an arrow pointing into the bend of the half-lines: to move X up, take higher powers of X (one or several steps up the ladder); to move Y down: take lower powers of Y (down the ladder, one or more steps).
+Depending on the relationship, it is enough to transform one of the variables, sometimes you will have to transform both.
+
+```{r, echo= FALSE}
+data.frame(cors = c(sapply(seq(-5, -0.01, 0.01), function(i){
+  abs(cor(ldt$Mean_RT, -(ldt$Freq+1)^i))
+}),
+abs(cor(ldt$Mean_RT, log(ldt$Freq+1))),
+sapply(seq(0.01, 5, 0.01), function(i){
+  abs(cor(ldt$Mean_RT, (ldt$Freq+1)^i))
+})),
+bandwidth = seq(-5, 5, 0.01)) %>%
+  ggplot(aes(bandwidth, cors))+
+  geom_line()+
+  theme_bw()+
+  geom_vline(xintercept = 0.1, linetype = 2)+
+  labs(y = "correlation",
+       title = "average reaction time ~ Tukey transformed word frequencies")
+```
+
+* Box-Cox transformation 
+* Yeo-Johnson Transformation
+
+
+### 2. Normality assumption of the distribution of residuals
+
+If the association between variables is not linear, there will be non-linearity in the distribution of residuals.
+
+See the first plot produced by `plot()` ([see more here](http://docs.statwing.com/interpreting-residual-plots-to-improve-your-regression/))
+or `QQplot`:
+
+```{r}
+plot(lm(Mean_RT~Freq, data = ldt))
+qqnorm(m1$residuals)
+qqline(m1$residuals)
+qqnorm(m2$residuals)
+qqline(m2$residuals)
+qqnorm(m3$residuals)
+qqline(m3$residuals)
+```
+
+### 3. Heteroscedasticity
+
+The variance of the residuals is not permanent (not homoscedastic). 
+
+```{r}
+ldt %>% 
+  ggplot(aes(Mean_RT, Freq))+
+  geom_point()+
+  theme_bw()
+```
+
+The problem can also be solved by transformation.
+
+
+
+### 4. Multicollinearity
+
+Linear relationship between certain predictors in the model.
+
+* correlation matrix
+* VIF (Variance inflation factor), `car::vif()`
+  * VIF = 1 (Not correlated)
+  * 1 < VIF < 5 (Moderately correlated)
+  * VIF >=5 (Highly correlated)
+
+### 5. Independency of observations
+
+Observations should be independent.
+
+

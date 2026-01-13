@@ -1,0 +1,286 @@
+---
+title: "Lab 10. Dimensionality reduction. MDS"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+#library(ggmap)
+#library(geosphere)
+library(raster) # for pointDistance, distHaversine function to calculate distances using longitude and latitude coordinates
+library(MASS) # for isoMDS
+library(svglite) # to save svg files
+```
+
+## Multi-dimensional scaling
+
+### 1. Location in poetry
+The dataset `RNCpoetryLocation` presents the places where Russian verses where written. Source: Russian National Corpus Poetry database. 
+
+* `Location` -- locations, mostly given by authors  
+* `Coarse` -- less detailed and corrected data  
+* `Region` -- region  
+* `Decade` -- decade of text creation  
+* `Freq` -- the number of texts created within the decade  
+* `E` -- latude (North/South)  
+* `N` -- longitude (East/West)
+
+```{r}
+geo0 <- read_tsv("https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/RNCpoetryLocation.txt")
+summary(geo0)
+
+#geo <- distinct_all(geo0, vars(N, E), .keep_all = TRUE)
+geo <- geo0 %>%
+  group_by(N, E, Location=Coarse.1stMention, Reg=Region2) %>%
+  summarize(Ndoc = sum(Freq)) %>%
+  ungroup()
+```
+
+The dataframe `geo` contains only distinct Locations with their coordinates.
+
+### 2. Distance matrix
+
+A simple example demonstrates the function `pointDistance()` from the package `roster`.
+
+Let us calculate the distances among `geo` locations. We use `pointDistance()` from `raster` package
+```{r}
+distmap <- pointDistance(geo[, c("E", "N")], lonlat=TRUE, allpairs=TRUE)
+distmap[is.na(distmap)] = 0
+distmap <- distmap + t(distmap)
+distmap[1:4,1:4]
+```
+
+### 3. MDS
+
+Fit MDS using the function `cmdscale()` (stats package).
+```{r}
+fit <- cmdscale(distmap, eig = TRUE)
+dim(fit$points)
+head(fit$points)
+```
+
+### 4. Plot the map
+```{r}
+geo2 <- data.frame(Dim1 = fit$points[,1], Dim2 = fit$points[,2], 
+                   name = geo$Location, Ndoc = geo$Ndoc)
+ggplot(geo2, aes(x=Dim2, y=Dim1, label=name)) +
+  geom_point(aes(size=Ndoc), colour = 'darkgray', alpha = 0.7) +
+  geom_text(aes(label=name), colour = 'orange', check_overlap = TRUE) 
+
+# rotate coordinates
+geo3 <- data.frame(lon = -1*fit$points[,1], lat = fit$points[,2],
+                   name = geo$Location, Ndoc = geo$Ndoc, Reg = geo$Reg)
+ggplot(geo3, aes(x=lon, y=lat, label=name)) +
+  geom_point(aes(size=Ndoc, colour = factor(Reg)), alpha = 0.8) +
+  geom_text(aes(label=name), colour = 'darkgray', size=2, 
+            hjust=1, check_overlap = TRUE, vjust=1) +
+  theme(panel.background = element_rect(fill = NA),
+    panel.grid.major = element_line(colour = "grey90"),
+    legend.position = "none")
+
+# East European locations
+ggplot(geo3, aes(x=lon, y=lat, label=name)) +
+  geom_point(aes(size=Ndoc), colour = 'darkgray', alpha = 0.8) +
+  xlim(-400000, 1000000) +
+  ylim(-300000, 400000) +
+  geom_text(aes(label=name), colour = 'blue', 
+            check_overlap = TRUE, alpha = 0.7)
+```
+
+### Non-metric MDS
+#### IsoMDS
+```{r eval=FALSE}
+# use distinct coordinates
+fit.iso <- isoMDS(distmap)
+geo.iso <- data.frame(name = geo$Location, lat = fit.iso$points[,1], lon = fit.iso$points[,2])
+ggplot(geo.iso, aes(x=lon, y=lat, label=name)) +
+  geom_point() +
+  geom_text(aes(label=name), colour = 'darkgray', hjust=0, vjust=0, alpha = 0.5) 
+```
+
+```{r}
+library(ggfortify)
+row.names(distmap) <- geo$Location
+fit.sam <- sammon(distmap)
+kmeans_clust <- kmeans(fit.sam$points, 9)
+str(kmeans_clust$cluster)
+# rotate coordinates
+geo4 <- data.frame(lon = -1*fit.sam$points[,1], lat = fit.sam$points[,2],
+                   name = geo$Location, Ndoc = geo$Ndoc, 
+                   Clust = as.factor(kmeans_clust$cluster))
+ggplot(geo4, aes(x=lon, y=lat, label=name)) +
+  geom_point(aes(size=Ndoc), colour='gray', alpha=0.8) +
+  geom_text(aes(label=name), size=2, colour=geo4$Clust, 
+            check_overlap=TRUE, alpha=0.7)
+
+plot(fit.sam$points, type = "n", main="MDS with sammon() and clustered", xlab = "X-Dim", ylab="Y-Dim")
+text(fit.sam$points, labels = rownames(distmap), col = kmeans_clust$cluster)
+# simple view
+autoplot(sammon(distmap), shape = FALSE, label.colour = 'blue', label.size = 3, label=TRUE, alpha = 0.5)
+```
+
+### Save as .svg file
+```{r}
+image <-
+ggplot(geo3, aes(x=lon, y=lat, label=name)) +
+  geom_point(aes(size=Ndoc, colour = factor(Reg)), alpha = 0.6) +
+  xlim(-3000000, 5700000) +
+  ylim(-2000000, 1700000) +
+  geom_text(aes(label=name, size=Ndoc), 
+          colour = 'grey20', alpha = 0.6, hjust = 'outward', vjust = 'outward') + # add check_overlap=TRUE in geom_text to avoid overlap 
+  theme(panel.background = element_rect(fill = NA),
+    panel.grid.major = element_line(colour = "grey90"),
+    legend.position = "none")
+image
+  ggsave(file="test.svg", plot=image, width=20, height=8)
+```
+
+### Pre-training: four US cities
+```{r}
+df.cities1 <- data.frame(name = c("New York City", "Chicago", "Los Angeles", "Atlanta"),
+                        lat  = c(       40.75170,  41.87440,      34.05420,  33.75280),
+                        lon  = c(      -73.99420, -87.63940,    -118.24100, -84.39360))
+distmap1 <- pointDistance(df.cities1[, c("lon", "lat")], lonlat=TRUE)
+distmap1
+distmap1[is.na(distmap1)] = 0
+distmap1 <- as.dist(distmap1)
+#distmap1 <- as.dist(t(distmap1)) 
+#str(distmap1)
+fit1 <- cmdscale(distmap1, eig = TRUE)
+fit1$points
+df.cities2 <- data.frame(name = df.cities1$name, 
+                         lat = fit1$points[,1], 
+                         lon = fit1$points[,2])
+ggplot(df.cities2, aes(x=lon, y=lat, label=name)) +
+  geom_point() +
+  geom_text(aes(label=name), colour = 'orange', hjust=0, vjust=0)
+
+# flip the map
+df.cities3 <- data.frame(name = df.cities1$name, 
+                         lat = -1*fit1$points[,1], 
+                         lon = -1*fit1$points[,2])
+ggplot(df.cities3, aes(y=lon, x=lat, label=name)) +
+  geom_point() +
+  geom_text(aes(label=name), colour = 'orange', hjust=0, vjust=0)
+```
+
+### Compare the picture
+```{r}
+library(rworldmap)
+newmap <- getMap(resolution = "low")
+plot(newmap, xlim = c(-10, 59), asp = 1)
+points(geo$E, geo$N, col = "red", cex = .6)
+```
+
+### Other packages
+```{r eval=FALSE}
+library(ggfortify)
+autoplot(eurodist)
+autoplot(sammon(eurodist), shape = FALSE, label.colour = 'blue', label.size = 3)
+autoplot(sammon(distmap), shape = FALSE, label.colour = 'blue', label.size = 3, label=geo$Coarse)
+```
+
+```{r eval=FALSE}
+library(geosphere)
+distHaversine(geo[, c("N", "E")]) / 1000 # Haversine distance in km
+```
+```{r eval=FALSE}
+install.packages("ggmap")
+library(ggmap)
+map <- get_map(location = 'Europe', zoom = 4)
+```
+
+```{r eval=FALSE}
+library(maps)
+eu <- c("Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", 
+        "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", 
+        "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", 
+        "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", 
+        "Slovenia", "Spain", "Sweden", "United Kingdom")
+europe <- map_data('world', region=eu)
+library(ggplot2)
+ggplot(europe, aes(x=long, y=lat, group=group)) +
+  geom_polygon(fill="steelblue", colour="black") +
+  xlim(-20, 40) + ylim(25,75)
+```
+
+```{r gene expression, eval=FALSE}
+library(dynwrap)
+
+url <- "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE67310&format=file&file=GSE67310%5FiN%5Fdata%5Flog2FPKM%5Fannotated.txt.gz"
+df <- read_tsv(url, col_types = cols(cell_name = "c", assignment = "c", experiment = "c", time_point = "c", .default = "d"))
+expression <- df[, -c(1:5)] %>% as.matrix() %>% magrittr::set_rownames(df$cell_name)
+cell_info <- df[, c(1:5)] %>% as.data.frame() %>% magrittr::set_rownames(df$cell_name) %>%
+  rename(
+    cell_id = cell_name,
+    group_id = assignment
+  ) %>%
+  filter(group_id != "Fibroblast")
+
+expression <- expression[cell_info$cell_id, expression %>% apply(2, sd) %>% order(decreasing = TRUE) %>% head(2000)]
+counts <- 2^expression-1
+
+fibroblast_reprogramming_treutlein <- wrap_data("id", rownames(expression)) %>%
+  add_expression(counts, expression) %>%
+  add_grouping(set_names(cell_info$group_id, cell_info$cell_id))
+```
+
+### Landmark MDS
+```{r eval=FALSE}
+set.seed(42)
+install.packages("lmds")
+library(lmds)
+# compute distances between random landmarks and all data points
+dist_landmarks <- select_landmarks(
+  dataset$expression,
+  distance_method = "pearson",
+  num_landmarks = 150
+)
+dim(dist_landmarks)
+# perform LMDS
+dimred_lmds <- cmdscale_landmarks(dist_landmarks)
+# now together
+dimred_lmds2 <- lmds(
+dataset$expression,
+distance_method = "pearson",
+num_landmarks = 150
+)
+
+# plot points
+qplot(dimred_lmds[,1], dimred_lmds[,2], colour = dataset$grouping) +
+theme_bw() +
+labs(x = "Comp 1", y = "Comp 2", colour = "Group")
+
+fit1 <- cmdscale(distmap1,eig=TRUE)
+str(fit1)
+autoplot(cmdscale(distmap1, eig = TRUE), label = TRUE, label.size = 3)
+autoplot(fit1)
+```
+Source: https://www.r-bloggers.com/lmds-landmark-multi-dimensional-scaling/
+
+Compare two lists with coordinates
+```{r}
+list1 <- data.frame(longitude = c(80.15998, 72.89125, 77.65032, 77.60599, 
+                                  72.88120, 76.65460, 72.88232, 77.49186, 
+                                  72.82228, 72.88871), 
+                    latitude = c(12.90524, 19.08120, 12.97238, 12.90927, 
+                                 19.08225, 12.81447, 19.08241, 13.00984,
+                                 18.99347, 19.07990))
+list2 <- data.frame(longitude = c(72.89537, 77.65094, 73.95325, 72.96746, 
+                                  77.65058, 77.66715, 77.64214, 77.58415,
+                                  77.76180, 76.65460), 
+                    latitude = c(19.07726, 13.03902, 18.50330, 19.16764, 
+                                 12.90871, 13.01693, 13.00954, 12.92079,
+                                 13.02212, 12.81447), 
+                    locality = c("A", "A", "B", "B", "C", "C", "C", "D", "D", "E"))
+```

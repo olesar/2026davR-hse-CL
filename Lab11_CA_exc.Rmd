@@ -1,0 +1,156 @@
+---
+title: "Correspondence analysis: practice with R"
+output: html_document
+date: "2025-04-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Данные 
+
+В частотной базе данных Поэтического корпуса НКРЯ были размечены части речи у слов, которые попадают в зону рифмовки.
+
+```{r data}
+library(tidyverse)
+rhymes.table <- data.frame(s1820s = c(535, 152, 37, 248, 10),
+                           s1860s = c(2034, 582, 183, 965, 52),
+                       s1920s = c(1913, 378, 145, 577, 57),
+                       s1960s = c(1071, 223, 105, 361, 38))
+row.names(rhymes.table) = c("NOUN", "ADJ", "ADV", "VERB", "GRAM")
+# Gram -- CCONJ, SCONJ or PART
+rhymes.table
+```
+
+Пользуясь таблицей сопряженности, визуализируйте связь между декадами и частями речи. Какая кумулятивная объясненная дисперсия у визуализации по Dim1 и Dim2?
+Проанализируйте визуализацию и сформулируйте ваши выводы, касающиеся ассоциации между временем и употреблением частей речи в зоне рифмовке (макс. 5 интересных как положительных, так и нейтральных и отрицательных ассоциаций).
+
+### Chisq test
+
+```{r chisq}
+rhymes.chisq <- chisq.test(rhymes.table)
+rhymes.chisq$exp
+rhymes.chisq
+```
+### Effect size
+
+```{r cramersv}
+library(confintr)
+cramersv(rhymes.chisq)
+```
+
+### Baloon plot
+
+```{r baloon}
+library("gplots")
+rhymes.table |> as.matrix() |> as.table() |>
+  balloonplot(main ="UPoS in the rhyme zone", xlab ="", ylab="",
+              label = FALSE, show.margins = FALSE)
+```
+# Mosaic plot
+
+```{r mosaic}
+library(vcd) 
+rhymes.table |> as.matrix() |> as.table() |> 
+  mosaic(shade = TRUE, split_vertical = TRUE, rot_labels=c(45,90,0,45))
+```
+
+
+```{r with FacroMineR}
+library(factoextra)
+library(FactoMineR)
+ca.model <- CA(rhymes.table, ncp = 3, graph = FALSE)
+print(ca.model)
+ca.model$eig
+summary(ca.model)
+```
+
+### Screeplot
+
+Если ожидать, что на каждое измерение должно приходиться равное количество объясненной дисперсии, то  
+для строк ожидаемое значение eigenvalue = 1/(nrow()-1) = 1/4 = 25% in terms of rows
+для столбцов -- 1/(ncol()-1) = 1/3 = 33.33%
+
+```{r screeplot}
+fviz_screeplot(ca.model, addlabels = TRUE, ylim = c(0, 50)) + 
+  geom_hline(yintercept=33.33, linetype=2, color="grey")
+```
+
+### Biplot 
+
+```{r biplot}
+fviz_ca_biplot(ca.model, repel = TRUE)
+
+# to make distances more reliable
+fviz_ca_biplot(ca.model, repel = TRUE,
+               geom.col = c("arrow", "text")) +
+  xlim(-0.2, 0.2) + ylim (-0.2, 0.2)
+```
+
+# Contribution and cosine squared
+
+**Contribution** -- отношение инерции (объясненной дисперсии), объясненной конкретной строкой (или столбцом) к общей инерции; выражается в процентах.  
+**cos2** = (distance from point to axis origin)^2 / (distance from point to plot origin)^2 -- мера качества представления строки (или столбца) на той или иной оси.  
+
+```{r cos2}
+fviz_ca_row(ca.model, alpha.row="contrib", col.row="cos2")
+```
+
+### Интерпретация анализа соответствий
+
+Первое измерение отражает 92,5% инерции (объясненной дисперсии), второе -- 7,5% (оба 99,9%). Визуализация модели, построенной с помощью метода анализа соответствий, позволяет выдвинуть гипотезу, что употребление наречий и существительных в зоне рифмовки ассоциировано с периодами 1920-х и 1960-х годов, в то время как употребление глаголов и прилагательных ассоциировано с периодами 1820-х и 1860-х годов.  
+Можно выдвинуть также гипотезу о связи употребления наречий с периодом 1960-х годов, однако небольшая инерция второго измерения (7,5%) предупреждает нас о том, что к этой гипотезе следует относиться очень осторожно.  
+Грамматические маркеры имеют малый вклад (contribution), но довольно существенно влияют позицию точек, поэтому можно повторить анализ с ними в качестве дополнительных данных (supplementary points).  
+
+### Построив гипотезы, проверяем на конкретных данных!   
+
+Связано ли употребление наречий с периодом 1960-х больше, чем с периодом 1920-х?
+
+```{r}
+(chisq.test(rhymes.table)$obs - chisq.test(rhymes.table)$exp) / sqrt(chisq.test(rhymes.table)$exp)
+```
+
+### Extra
+
+### CA with supplementary rows
+
+```{r sup.cols}
+ca.model.sup <- CA(rhymes.table, row.sup = 5, graph = FALSE)
+ca.model.sup$eig
+summary(ca.model.sup)
+fviz_ca_biplot(ca.model.sup, repel = TRUE,
+               geom.col = c("arrow", "text")) 
+```
+
+### Correspondence analysis with ade4
+
+```{r ca_ade4}
+library(ade4)
+ca.model <- dudi.coa(rhymes.table, scan = FALSE, nf = 3)
+#print(ca.model)
+#ca.model$eig
+summary(ca.model)
+score(ca.model)
+```
+
+### Make contingency table from long format and filter data
+
+```{r data1}
+rhymes <- read_tsv("https://raw.githubusercontent.com/LingData2019/LingData/master/data/poetry_last_in_lines.csv", col_types="ffffcc")
+str(rhymes)
+summary(rhymes)
+
+rhymes.table <- rhymes |> select("Decade", "UPoS") |> table()
+rhymes.table
+chisq.test(rhymes.table)
+chisq.test(rhymes.table)$exp
+
+# remove rare factor levels to meet the criteria for expected frequencies
+rhymes1 <- rhymes |> select("Decade", "UPoS") |> 
+  filter(UPoS %in% c("NOUN", "ADJ", "ADV", "VERB")) |> droplevels()
+
+rhymes.table <- rhymes1 |> table()
+rhymes.table
+```
+

@@ -1,0 +1,175 @@
+---
+title: "Lab6_anova"
+output: html_document
+date: "2023-01-31"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE}
+library(tidyverse) 
+```
+
+### Part 3: Universal linguistic hierarchies: a case of Modern Greek (Standard and Cypriot dialects)
+
+Based on: Leivada, Evelina; Westergaard, Marit, 2019, Universal
+linguistic hierarchies are not innately wired. PeerJ, v.7.
+[link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6679903/#fn-1).
+Source of data: TROLLing repository: Leivada, Evelina; Westergaard,
+Marit, 2019, "Replication Data for: Universal linguistic hierarchies are
+not innately wired", <https://doi.org/10.18710/NTLLUF>, DataverseNO, V1
+
+#### Constructions with two adjectives
+
+In English, the order of two adjectives in phrases like:
+
+     a big black bag # ok
+    *a black big bag # unacceptable, ungrammatically ill-formed, or semantically anomalous
+
+is powered by the semantic class of adjective (e.g. the `color`
+adjective closer to the noun than the `size` adjective).
+
+A syntactic hierarchy of closeness to the noun in Chomsky's Universal
+Grammar suggests the following order and is claimed to be innate and
+universal (= valid for all languages).
+
+    Subjective Comment > Evidential > Size > Length
+    > Height > Speed > Depth > Width > Temperature > Wetness > Age
+    > Shape > Color > Nationality/Origin > Material 
+    # (adapted from Scott, 2002: 114)
+
+The goal of Leivada&Westergaard research is identify what happens when
+people process orderings that either comply with the hierrarchy or
+violate it.
+
+#### Method
+
+Experiment 1 140 neurotypical, adult speakers completed a timed forced
+choice task that featured stimuli showing a combination of two
+adjectives and a concrete noun (e.g., *I bought a square black table*).
+Two types of responses were collected: (i) acceptability judgments on a
+3-point Likert scale that featured the options 3: *correct*,\
+2: *neither correct nor wrong*,\
+1: *wrong*
+
+and
+
+(ii) reaction times (RT).
+
+The task featured three conditions: 1. size adjective \> nationality
+adjective, 2. color adjective \> shape adjective, 3. subjective comment
+adjective \> material adjective. Each condition had two orders. In the
+congruent order, the adjective pair was ordered in agreement with what
+is traditionally accepted as dictated by the universal hierarchy. In the
+incongruent order, the ordering was reversed, thus the hierarchy was
+violated.
+
+In the second experiment, 30 bidialectals (native speakers of Standard
+and Cypriot Greek) were tested in both language varieties, 36
+observations per participant, 18 for each variety.
+
+#### Data
+
+```{r}
+suppressMessages(library(readr))
+mono <- read_delim("https://dataverse.no/api/access/datafile/:persistentId?persistentId=doi:10.18710/NTLLUF/XAMMNB", delim = ";")
+
+bidialect <- read_csv("https://dataverse.no/api/access/datafile/:persistentId?persistentId=doi:10.18710/NTLLUF/PQAKFW", header = F, sep = ";")
+?read.csv
+bidialect <- read_delim("https://dataverse.no/api/access/datafile/:persistentId?persistentId=doi:10.18710/NTLLUF/PQAKFW", delim=";")
+```
+
+see also [reading key for the
+data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6679903/bin/peerj-07-7438-s001.txt)
+
+#### Data overview
+
+### 1.1
+
+```{r}
+
+```
+
+Create the following table using filter and by-group summary in
+tidyverse.
+
+Demographic information for monolinguals (experiment 1).
+
+       Participants
+    Gender     Male       66
+               Female       74
+    Education    Secondary  18
+               Tertiary  122
+    Handedness Right       126
+               Left       14
+
+### 1.2
+
+```{r}
+
+```
+
+Create the same summary for experiment 2.
+
+Demographic information for bidialectals (experiment 2).
+
+    Participants
+    Gender     Male       11
+               Female       19
+    Education    Secondary   6
+               Tertiary   24
+    Handedness Right        28
+               Left        2
+
+### 1.3
+
+Create a plot that shows RT distribution in experiment 1 (all
+participants and conditions taken together).
+
+```{r}
+
+```
+
+Do reaction times follow a normal distribution? Or do they skewed and
+have long left or right tails?
+
+### 1.4
+
+Normalise data applying the standard logarithm (RTlog = log10(RT))
+
+```{r}
+
+```
+
+### 1.5
+
+Create a plot similar to that in 1.3 that shows RTlog distribution.
+
+```{r}
+
+```
+
+### 1.6
+
+Filter out outliers: \* automatic responces below 600 ms (i.e., when a
+button is pressed too fast, without allowing enough time for actual
+consideration of the presented stimuli) \* usong ??3SD filter (SD -
+standard deviation)
+
+```{r}
+
+```
+
+### 1.7
+
+Reproduce Figure 1 - Figure 7 from the paper using ggplot2.
+
+### 1.8
+
+Run ANOVA.
+

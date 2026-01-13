@@ -1,0 +1,732 @@
+WordNo,Translation,AgeOfAcq,CumulOtherWords,WordCategory,BroadCategory,FreqCorpus,ParentFreq
+'au','ouch',16,40,sound effects,nominals,4366,7
+'bææ','baa baa',15,40,sound effects,nominals,18,5
+'brrr (bil-lyd)','vroom',13,20,sound effects,nominals,NA,20
+'gakk gakk','quack quack',17,40,sound effects,nominals,16,3
+'grr','grr',22,220,sound effects,nominals,78,1
+'kykeliky','cock-a-doodle-doo',22,220,sound effects,nominals,8,2
+'mjau','meow',17,60,sound effects,nominals,214,7
+'møø','moo',15,40,sound effects,nominals,8,7
+'nam - nam','yum yum',13,40,sound effects,nominals,35,19
+'oi (uttrykk for overraskelse)','oh',20,80,sound effects,nominals,5019,437
+'tøff-tøff','choo choo',23,220,sound effects,nominals,5,3
+'voff voff','woof woof',15,40,sound effects,nominals,10,52
+'(meite)mark','(earth)worm',28,460,common nouns,nominals,NA,NA
+'ei and','duck',24,240,common nouns,nominals,354716,4
+'en ape','monkey',22,200,common nouns,nominals,1535,2
+'en bjørn','bear',23,240,common nouns,nominals,9156,9
+'et dyr','animal',25,340,common nouns,nominals,78524,29
+'et ekorn','squirrel',25,380,common nouns,nominals,982,7
+'en elefant','elephant',22,200,common nouns,nominals,3344,8
+'en elg','moose',28,520,common nouns,nominals,6162,5
+'et esel','donkey',32,560,common nouns,nominals,1292,9
+'en fisk','fish',20,120,common nouns,nominals,73111,11
+'ei flue','fly',23,240,common nouns,nominals,5154,3
+'en frosk','frog',24,280,common nouns,nominals,2759,4
+'en fugl','bird',22,160,common nouns,nominals,40740,40
+'ei gås','goose',36,660,common nouns,nominals,1491,2
+'en gris','pig',20,100,common nouns,nominals,7868,45
+'en hane','rooster',25,440,common nouns,nominals,1508,1
+'en hest','horse',19,100,common nouns,nominals,87784,39
+'ei høne','hen',24,280,common nouns,nominals,4401,5
+'en hund','dog',20,100,common nouns,nominals,166676,35
+'en kanin','bunny',22,180,common nouns,nominals,10421,9
+'en katt','cat',19,80,common nouns,nominals,41391,24
+'en kattunge',kitten',31,560,common nouns,nominals,6890,1
+'en krokodille','crocodile',24,280,common nouns,nominals,1190,15
+'ei ku','cow',20,120,common nouns,nominals,10848,10
+'en kylling','chicken',25,380,common nouns,nominals,7512,6
+'et lam','lamb',25,340,common nouns,nominals,3076,7
+'(leke)bamse','teddybear',19,120,common nouns,nominals,3542,1
+'en løve','lion',22,200,common nouns,nominals,3977,9
+'en maur','ant',27,480,common nouns,nominals,1742,1
+'ei mus','mouse',21,140,common nouns,nominals,12268,20
+'en mygg','mosquito',32,620,common nouns,nominals,3365,1
+'en pingvin','penguin',27,480,common nouns,nominals,1297,2
+'en ponni','pony',35,680,common nouns,nominals,4337,1
+'et reinsdyr','reindeer',36,660,common nouns,nominals,1317,3
+'en sau','sheep',22,160,common nouns,nominals,10218,15
+'en sebra','zebra',26,440,common nouns,nominals,448,1
+'en sjiraff','giraffe',23,240,common nouns,nominals,291,3
+'ei skilpadde','turtle',26,440,common nouns,nominals,1353,4
+'en sommerfugl','butterfly',25,320,common nouns,nominals,2715,3
+'en tiger','tiger',24,260,common nouns,nominals,3190,11
+'ei ugle','owl',25,300,common nouns,nominals,2374,2
+'en ulv','wolf',28,480,common nouns,nominals,14204,27
+'en valp','puppy',34,660,common nouns,nominals,26852,2
+'en veps','wasp',26,380,common nouns,nominals,1086,1
+'et akebrett','sled',25,420,common nouns,nominals,351,3
+'ei barnevogn','stroller',23,180,common nouns,nominals,1828,1
+'en bil','car',18,60,common nouns,nominals,186357,96
+'en brannbil','firetruck',24,300,common nouns,nominals,740,3
+'en båt','boat',20,140,common nouns,nominals,79071,31
+'en buss','bus',20,100,common nouns,nominals,34459,32
+'et fly','airplane',19,100,common nouns,nominals,55541,42
+'et helikopter','helicopter',24,320,common nouns,nominals,8329,2
+'en lastebil','truck',23,240,common nouns,nominals,5854,4
+'en motorsykkel','motorcycle',25,320,common nouns,nominals,4282,16
+'en sykkel','bicycle',22,160,common nouns,nominals,22334,18
+'et tog','train',20,140,common nouns,nominals,24356,18
+'en traktor','tractor',20,160,common nouns,nominals,3479,24
+'en trehjulssykkel','tricycle',31,620,common nouns,nominals,104,7
+'en ball','ball',16,40,common nouns,nominals,96368,74
+'en ballong','balloon',20,140,common nouns,nominals,2903,7
+'en blyant','pencil',26,380,common nouns,nominals,1822,5
+'ei bok','book',18,80,common nouns,nominals,252996,167
+'klosser','blocks',23,300,common nouns,nominals,1217,21
+'ei dukke','doll',20,120,common nouns,nominals,6522,36
+'lego','lego',25,320,common nouns,nominals,336,3
+'eventyr','fairytale',28,560,common nouns,nominals,16232,2
+'fargeblyant','crayon',31,580,common nouns,nominals,119,2
+'en presang','present',25,380,common nouns,nominals,900,7
+'et kritt','chalk',NA,660,common nouns,nominals,550,1
+'en leke','toy',22,160,common nouns,nominals,11744,69
+'lim','glue',28,520,common nouns,nominals,3616,6
+'en penn','pen',26,480,common nouns,nominals,6184,3
+'plastilina','plasticine',35,680,common nouns,nominals,69,1
+'et puslespill','puzzle',24,340,common nouns,nominals,1543,7
+'et spill','game',25,320,common nouns,nominals,127043,1
+'ei såpeboble','soap bubbles',25,420,common nouns,nominals,248,18
+'ei brødskive','slice (of bread)',21,180,common nouns,nominals,3034,2
+'en agurk','cucumber',23,240,common nouns,nominals,1908,1
+'en appelsin','orange',21,160,common nouns,nominals,2869,5
+'en banan','banana',17,60,common nouns,nominals,4673,17
+'bolle','buns',20,120,common nouns,nominals,NA,NA
+'en bønne','beans',NA,NA,common nouns,nominals,3285,1
+'et brød','bread',20,140,common nouns,nominals,13129,11
+'brus','soda/pop',23,220,common nouns,nominals,5503,2
+'cola','coke',28,520,common nouns,nominals,3232,1
+'corn flakes','cornflakes',34,680,common nouns,nominals,233,1
+'dessert','dessert',28,500,common nouns,nominals,4248,3
+'en drue',grapes',21,180,common nouns,nominals,3611,1
+'et egg','egg',20,120,common nouns,nominals,25973,16
+'et eple','apple',18,80,common nouns,nominals,8413,27
+'en ert','peas',29,560,common nouns,nominals,2466,1
+'fisk','fish',20,140,common nouns,nominals,73111,11
+'frokostblanding','cereal',NA,NA,common nouns,nominals,686,1
+'frukt','fruits',25,320,common nouns,nominals,22242,1
+'godteri','candy',25,340,common nouns,nominals,4832,3
+'grøt','porridge',22,220,common nouns,nominals,2799,8
+'ei gulrot','carrot',22,240,common nouns,nominals,4599,4
+'en hamburger','hamburger',30,580,common nouns,nominals,1606,1
+'is','ice cream',17,60,common nouns,nominals,180159,11
+'et jordbær','strawberry',23,320,common nouns,nominals,3565,3
+'juice','juice',20,140,common nouns,nominals,2818,3
+'kaffe','coffee',22,240,common nouns,nominals,27804,12
+'kake','cake',19,100,common nouns,nominals,13219,17
+'en kjeks','cracker',19,80,common nouns,nominals,2138,17
+'kjøtt','meat',25,360,common nouns,nominals,20096,3
+'kjøttkaker','meatballs',25,380,common nouns,nominals,987,1
+'et knekkebrød','crispbread',25,340,common nouns,nominals,1849,1
+'kylling','chicken',25,340,common nouns,nominals,7510,6
+'leverpostei','liver paté',23,280,common nouns,nominals,1157,1
+'mat','food',19,80,common nouns,nominals,124531,28
+'ei matpakke','lunch packet',26,500,common nouns,nominals,2521,1
+'melk','milk',19,80,common nouns,nominals,17156,25
+'en melon','melon',26,420,common nouns,nominals,697,1
+'nøtter','nuts',31,580,common nouns,nominals,5757,1
+'nugatti','Nugatti',36,660,common nouns,nominals,209,1
+'en ost','cheese',20,100,common nouns,nominals,8516,16
+'ei pannekake','pancake',24,320,common nouns,nominals,1916,2
+'pasta','pasta',25,380,common nouns,nominals,3675,4
+'en pizza','pizza',22,180,common nouns,nominals,9099,4
+'ei pølse','sausages',20,180,common nouns,nominals,8362,4
+'pommes frites','french fries',32,640,common nouns,nominals,5,1
+'popcorn','popcorn',31,620,common nouns,nominals,224,1
+'poteter','potatoes',23,280,common nouns,nominals,10207,1
+'potetgull','potato chips',29,480,common nouns,nominals,1214,1
+'ris','rice',23,280,common nouns,nominals,6155,1
+'ristet brød','toast',NA,NA,common nouns,nominals,108,1
+'en rosin','raisins',22,200,common nouns,nominals,2121,1
+'saft','fruit juice',22,200,common nouns,nominals,6323,2
+'salami','salami',28,520,common nouns,nominals,432,5
+'salt','salt',28,520,common nouns,nominals,17282,2
+'saus','sauce',26,360,common nouns,nominals,4791,1
+'sjokolade','chocolate',23,220,common nouns,nominals,11297,7
+'smør','butter',23,260,common nouns,nominals,8481,6
+'spagetti','spaghetti',25,340,common nouns,nominals,412,1
+'sukkertøy','candy',36,640,common nouns,nominals,464,3
+'suppe','soup',25,360,common nouns,nominals,5071,1
+'syltetøy',jam',23,280,common nouns,nominals,1627,5
+'te','tea',26,440,common nouns,nominals,28772,10
+'tran','cod-liver oil',30,500,common nouns,nominals,2734,1
+'en tyggegummi','gum',27,480,common nouns,nominals,811,4
+'en vaffel','waffles',25,320,common nouns,nominals,2823,1
+'vann','water',19,100,common nouns,nominals,128365,61
+'yoghurt','yogurt',20,180,common nouns,nominals,2455,3
+'et belte','belt',27,420,common nouns,nominals,5983,1
+'ei bleie','diaper',18,80,common nouns,nominals,2239,21
+'ei bukse','pants',20,120,common nouns,nominals,13342,16
+'en dress','(thermal) suit',22,220,common nouns,nominals,4804,3
+'en genser','sweater',22,180,common nouns,nominals,5296,14
+'en glidelås','zipper',26,440,common nouns,nominals,1213,1
+'halskjede','necklace',32,600,common nouns,nominals,149,1
+'en hanske','gloves',28,480,common nouns,nominals,4341,1
+'ei jakke','jacket',20,120,common nouns,nominals,7271,5
+'en joggesko','sneakers',27,480,common nouns,nominals,1657,4
+'en kjole','dress',25,300,common nouns,nominals,13038,16
+'en knapp','buttons',23,280,common nouns,nominals,19068,3
+'ei lue','cap',19,100,common nouns,nominals,4902,10
+'en pysjamas','pajamas',22,180,common nouns,nominals,178,1
+'regntøy','rainwear',26,400,common nouns,nominals,546,2
+'en sandal','sandals',26,460,common nouns,nominals,1088,1
+'shorts','shorts',26,480,common nouns,nominals,2320,1
+'et skjerf','scarf',26,380,common nouns,nominals,3567,6
+'ei skjorte','shirt',28,480,common nouns,nominals,6440,6
+'en sko','shoes',18,60,common nouns,nominals,25474,23
+'smekke','bib',22,180,common nouns,nominals,97,2
+'en smokk','pacifier',19,100,common nouns,nominals,876,6
+'en sokk','socks',20,120,common nouns,nominals,4152,7
+'en støvel','boots',22,220,common nouns,nominals,3174,2
+'ei strømpebukse','tights',23,280,common nouns,nominals,880,3
+'strømper','sock',30,560,common nouns,nominals,1423,1
+'ei t-skjorte','t-shirt',27,500,common nouns,nominals,4612,1
+'en tøffel','slippers',25,300,common nouns,nominals,1076,16
+'ei underbukse','underpants',28,500,common nouns,nominals,922,1
+'en vott','mittens',22,160,common nouns,nominals,1479,2
+'en ankel','ankle',NA,NA,common nouns,nominals,3147,1
+'et ansikt','face',25,320,common nouns,nominals,35337,4
+'en arm','arm',22,200,common nouns,nominals,28497,9
+'et bein (kroppsdel)','leg',23,240,common nouns,nominals,31238,45
+'en finger','finger',22,220,common nouns,nominals,35457,5
+'en fot','foot',21,160,common nouns,nominals,34233,3
+'hake','chin',25,320,common nouns,nominals,1533,7
+'ei hånd','hand',22,160,common nouns,nominals,105619,58
+'hår','hair',20,140,common nouns,nominals,35568,33
+'et hode','head',20,160,common nouns,nominals,84749,45
+'et kinn','cheek',24,280,common nouns,nominals,4826,7
+'et kne','knee',25,340,common nouns,nominals,14794,3
+'lepper','lips',28,520,common nouns,nominals,10442,1
+'en mage','tummy',20,120,common nouns,nominals,32819,13
+'en munn','mouth',20,100,common nouns,nominals,32844,37
+'en navle','belly button',23,240,common nouns,nominals,1957,24
+'ei nese','nose',19,80,common nouns,nominals,15947,20
+'et øre (kroppsdel)','ear',20,100,common nouns,nominals,35384,13
+'et øye','eye',19,100,common nouns,nominals,100999,31
+'pupp','tit',20,180,common nouns,nominals,7496,2
+'ei rumpe','buttocks/bottom',22,240,common nouns,nominals,9979,9
+'en rygg','back',25,360,common nouns,nominals,39556,11
+'ei skulder','shoulder',31,600,common nouns,nominals,15013,2
+'ei tann','teeth',22,200,common nouns,nominals,15536,14
+'tiss','willie',20,100,common nouns,nominals,1410,1
+'ei tunge','tongue',25,300,common nouns,nominals,12814,2
+'ei tå','toe',22,200,common nouns,nominals,7497,18
+'et bilde','picture',21,160,common nouns,nominals,450532,57
+'boks','box',25,400,common nouns,nominals,26669,16
+'en børste','brush',23,260,common nouns,nominals,667,2
+'ei bøtte','bucket',22,240,common nouns,nominals,5175,18
+'et brett','tray',33,600,common nouns,nominals,6842,4
+'briller','glasses',22,180,common nouns,nominals,5988,8
+'dopapir','toilet paper',25,360,common nouns,nominals,553,5
+'dyne','duvet',22,180,common nouns,nominals,3617,3
+'eske','box',26,480,common nouns,nominals,6027,8
+'fat','(large) plate',26,400,common nouns,nominals,NA,NA
+'ei flaske','bottle',22,200,common nouns,nominals,18779,9
+'drikke','drink',19,100,common nouns,nominals,13625,27
+'en gåbil','toy car',36,660,common nouns,nominals,3,1
+'en gaffel','fork',22,220,common nouns,nominals,1296,4
+'et glass','glass',22,220,common nouns,nominals,23884,2
+'hammer','hammer',25,420,common nouns,nominals,1726,6
+'et håndkle','towel',25,360,common nouns,nominals,2908,13
+'en kam','comb',28,520,common nouns,nominals,3526,4
+'et kamera','camera',27,500,common nouns,nominals,104401,5
+'kasse','box',26,440,common nouns,nominals,17380,8
+'kjøkkenrull','roll of paper towels',NA,NA,common nouns,nominals,9,1
+'ei klokke (bjelle)','clock',22,140,common nouns,nominals,82457,21
+'en kniv','knife',23,220,common nouns,nominals,10132,1
+'en kopp','cup',20,120,common nouns,nominals,8944,21
+'en kost (å feie)','broom',25,360,common nouns,nominals,16399,4
+'ei krukke','jar',NA,NA,common nouns,nominals,1312,1
+'krus','cup',34,680,common nouns,nominals,870,1
+'ei lampe','lamp',23,300,common nouns,nominals,4685,3
+'ei lommebok','wallet',26,500,common nouns,nominals,7743,1
+'et lys','light',18,60,common nouns,nominals,74510,13
+'medisin','medicine',26,440,common nouns,nominals,33309,1
+'en nøkkel','keys',23,240,common nouns,nominals,12675,6
+'papir','paper',23,240,common nouns,nominals,24874,13
+'penger','money',24,300,common nouns,nominals,211410,6
+'en plante','plant',32,580,common nouns,nominals,20413,2
+'ei pute','pillow',22,180,common nouns,nominals,5131,3
+'en radio','radio',28,480,common nouns,nominals,22688,1
+'ei saks','scissors',25,340,common nouns,nominals,1961,3
+'såpe','soap',22,240,common nouns,nominals,2991,5
+'en sekk','bag',25,340,common nouns,nominals,11416,3
+'en serviett','napkin',28,520,common nouns,nominals,769,2
+'skål','bowl',27,480,common nouns,nominals,2121,1
+'ei skje','spoon',20,140,common nouns,nominals,5034,36
+'søppel','rubbish',23,240,common nouns,nominals,8093,6
+'ei søppelbøtte','rubbish bin',27,480,common nouns,nominals,519,1
+'en støvsuger','vacuum cleaner',25,340,common nouns,nominals,1203,8
+'en tallerken','plate',25,360,common nouns,nominals,2631,4
+'en tannbørste','toothbrush',23,240,common nouns,nominals,972,8
+'en telefon','telephone',22,160,common nouns,nominals,91612,20
+'et teppe','blanket/carpet',23,240,common nouns,nominals,8255,3
+'ei veske','bag',24,340,common nouns,nominals,7606,13
+'bad','bathroom',20,100,common nouns,nominals,18277,9
+'et badekar','bathtub',25,360,common nouns,nominals,2807,2
+'en balkong','balcony',NA,NA,common nouns,nominals,3835,2
+'ei barneseng','cot',32,620,common nouns,nominals,146,1
+'barnestol','high chair',31,600,common nouns,nominals,308,1
+'et bord','table',22,200,common nouns,nominals,35222,43
+'en do','toilet',20,160,common nouns,nominals,32705,32
+'ei dør','door',22,200,common nouns,nominals,55036,26
+'dusj','shower',20,180,common nouns,nominals,10612,3
+'en garasje','garage',26,400,common nouns,nominals,6483,7
+'gyngestol','rocking chair',NA,660,common nouns,nominals,188,1
+'en kjeller','basement',26,500,common nouns,nominals,11422,6
+'et kjøkken','kitchen',24,300,common nouns,nominals,21854,17
+'et kjøleskap','refrigerator',25,360,common nouns,nominals,7337,14
+'en komfyr','stove',32,600,common nouns,nominals,1449,4
+'ei lekegrind','play pen',NA,680,common nouns,nominals,602,2
+'en ovn','oven',25,360,common nouns,nominals,7130,5
+'en PC','computer',29,520,common nouns,nominals,41778,1
+'potte','potty',25,280,common nouns,nominals,1184,3
+'et rom','room',25,380,common nouns,nominals,87748,16
+'ei seng','bed',20,160,common nouns,nominals,32461,47
+'et skap','closet',25,380,common nouns,nominals,11310,19
+'en skuff','drawer',26,420,common nouns,nominals,1146,6
+'en sofa','couch',23,240,common nouns,nominals,14687,5
+'soverom','bedroom',26,480,common nouns,nominals,11370,1
+'en stol','chair',20,140,common nouns,nominals,17754,40
+'stue','living room',24,300,common nouns,nominals,19733,8
+'en terrasse','terrace',32,640,common nouns,nominals,4770,1
+'en tørketrommel','dryer',NA,660,common nouns,nominals,767,4
+'ei trapp','stairs',23,260,common nouns,nominals,12647,1
+'en TV','TV',22,240,common nouns,nominals,58063,9
+'vask','sink',25,300,common nouns,nominals,6876,6
+'en vaskemaskin','washing machine',26,460,common nouns,nominals,2887,2
+'et vindu','window',25,320,common nouns,nominals,30472,31
+'badebasseng','pool',26,480,places to go,nominals,268,2
+'bakgård','backyard',NA,NA,places to go,nominals,2581,1
+'en blomst','flower',20,140,places to go,nominals,16242,30
+'et fjell','mountain',26,420,places to go,nominals,34010,1
+'et flagg','flag',25,360,places to go,nominals,10441,1
+'et fortau','sidewalk',34,640,places to go,nominals,2704,1
+'gress','grass',23,300,places to go,nominals,10258,2
+'en gressklipper','lawn mower',28,520,places to go,nominals,657,6
+'en himmel','sky',25,360,places to go,nominals,27605,1
+'ei huske','swing',23,160,places to go,nominals,14753,128
+'en kjelke','sled',30,580,places to go,nominals,312,6
+'en måne','moon',22,180,places to go,nominals,8110,16
+'en pinne','stick',25,360,places to go,nominals,5990,2
+'regn','rain',23,240,places to go,nominals,19954,1
+'ei sandkasse','sandbox',25,320,places to go,nominals,1061,5
+'ei sklie','slide',23,220,places to go,nominals,430,2
+'en sky','clouds',26,440,places to go,nominals,9652,3
+'snø','snow',21,140,places to go,nominals,25916,4
+'en snømann','snowman',25,380,places to go,nominals,695,2
+'ei sol','sun',22,180,places to go,nominals,47810,14
+'en spade','spade',22,200,places to go,nominals,3268,22
+'en stein','rocks',23,240,places to go,nominals,20532,5
+'en stige','ladder',28,480,places to go,nominals,4002,3
+'ei stjerne','stars',24,320,places to go,nominals,37996,12
+'et tak','roof',25,360,places to go,nominals,80784,11
+'ei trampoline','trampoline',26,440,places to go,nominals,698,1
+'et tre','tree',23,260,places to go,nominals,21156,47
+'vann','water',20,120,places to go,nominals,128365,61
+'en vannslange','hose',31,580,places to go,nominals,218,1
+'en vei','street',24,320,places to go,nominals,242681,36
+'vind','wind',26,500,places to go,nominals,26281,1
+'en bensinstasjon','gas station',31,600,places to go,nominals,4120,1
+'en bondegård','farm',31,600,places to go,nominals,753,5
+'en butikk','store',23,240,places to go,nominals,63212,3
+'en by','downtown',29,500,places to go,nominals,287890,10
+'en campingplass','camping site',NA,NA,places to go,nominals,3425,1
+'en dyrehage','zoo',32,620,places to go,nominals,781,2
+'en fest','party',30,560,places to go,nominals,32675,2
+'en hage','yard',26,440,places to go,nominals,19445,6
+'et hjem','home',23,200,places to go,nominals,25005,7
+'et hus','house',20,140,places to go,nominals,111408,32
+'en jobb','work',23,260,places to go,nominals,203898,4
+'kino','cinema',34,640,places to go,nominals,25031,1
+'kirke','church',32,600,places to go,nominals,75007,1
+'landet','the countryside',NA,NA,places to go,nominals,NA,NA
+'en lekeplass','playground',25,380,places to go,nominals,2281,3
+'en park','park',34,660,places to go,nominals,14131,19
+'et sirkus','circus',34,640,places to go,nominals,3908,1
+'skog','the woods',25,380,places to go,nominals,42463,1
+'en skole','school',26,420,places to go,nominals,250915,28
+'ei strand','beach',29,500,places to go,nominals,21420,2
+'svømmehall','swimming pool',35,620,places to go,nominals,1887,1
+'ut','outside',20,100,places to go,nominals,1371838,181
+'en baby','baby',17,60,people,nominals,16739,33
+'et barn','child',26,440,people,nominals,438387,21
+'barnets navn','child's own name',20,100,people,nominals,NA,317
+'barnevaktens navn','babysitter's name',25,360,people,nominals,NA,NA
+'en bestefar','grandfather',22,180,people,nominals,6554,1
+'ei bestemor','grandmother',23,180,people,nominals,8557,2
+'en bonde','farmer',35,640,people,nominals,26702,2
+'en brannmann','fireman',26,440,people,nominals,1764,2
+'en bror','brother',25,420,people,nominals,34283,1
+'cowboy','cowboy',NA,NA,people,nominals,1734,8
+'ei dame','lady',22,200,people,nominals,59469,22
+'en doktor','doctor',26,460,people,nominals,3664,5
+'farfar','(paternal) grandfather',25,320,people,nominals,2063,1
+'farmor','(paternal) grandmother',25,300,people,nominals,1905,1
+'folk','people',32,600,people,nominals,384521,2
+'en gutt','boy',22,200,people,nominals,134986,37
+'ei helsesøster','nurse',NA,NA,people,nominals,4949,1
+'ei jente','girl',23,200,people,nominals,159199,30
+'en klovn','clown',30,540,people,nominals,2462,7
+'en lærer','teacher',NA,680,people,nominals,74910,12
+'en mamma','mommy',12,20,people,nominals,36751,171
+'en mann','man',21,140,people,nominals,315581,18
+'et menneske','people',32,600,people,nominals,289792,9
+'morfar','(maternal) grandfather',26,340,people,nominals,1736,1
+'mormor','(maternal) grandmother',22,160,people,nominals,2860,1
+'navn på kjæledyr','pet's name',25,240,people,nominals,NA,NA
+'en oldefar','great-grandfather',33,660,people,nominals,1234,1
+'ei oldemor','great-grandmother',27,460,people,nominals,1194,1
+'en onkel','uncle',22,220,people,nominals,9753,6
+'en pappa','daddy',13,20,people,nominals,24689,118
+'politi','police',26,400,people,nominals,89536,7
+'et postbud','mailman',33,640,people,nominals,375,4
+'ei søster','sister',26,500,people,nominals,20446,1
+'ei tante','aunt',20,140,people,nominals,8489,6
+'en venn','friend',26,520,people,nominals,240567,8
+'venninne','(female) friend',NA,680,people,nominals,19939,2
+'”kommer og tar deg” lek',''gonna get you' game',24,320,games & routines,games & routines,73,1
+'å bade','bathe',17,60,games & routines,games & routines,8123,16
+'frokost','breakfast',23,320,games & routines,games & routines,15287,1
+'å gå på do','go to the bathroom',24,300,games & routines,games & routines,1252,1
+'god natt','good night',19,80,games & routines,games & routines,2520,1
+'hadet','bye',14,40,games & routines,games & routines,467,6
+'hallo','hello',20,140,games & routines,games & routines,3699,61
+'handle','shop',26,440,games & routines,games & routines,109640,2
+'hei','hi',13,40,games & routines,games & routines,64086,74
+'hysj','hush',18,60,games & routines,games & routines,353,1
+'ikke','not',20,120,games & routines,games & routines,5202279,893
+'ja','yes',15,40,games & routines,games & routines,158496,3291
+'jo','yes',23,320,games & routines,games & routines,589490,120
+'klappe kake','patty cake',25,240,games & routines,games & routines,3,1
+'kveldsmat','supper',26,420,games & routines,games & routines,1590,1
+'Borte! (lek hvor ansikt gjemmes og plutselig vises)','peek-a-boo',15,40,games & routines,games & routines,5,27
+'lunsj','lunch',28,540,games & routines,games & routines,12285,1
+'en middag','dinner',23,240,games & routines,games & routines,27049,6
+'nei','no',15,40,games & routines,games & routines,136554,470
+'å ringe',call (on phone)',22,220,games & routines,games & routines,45240,23
+'snurre rundt','turn around',26,400,games & routines,games & routines,565,1
+'sovetid','nap time',27,520,games & routines,games & routines,55,1
+'sååå stor','this big!',20,200,games & routines,games & routines,46,1
+'takk','thank you',13,40,games & routines,games & routines,106589,106
+'vær så snill','please',26,420,games & routines,games & routines,3787,1
+'vent','wait',25,380,games & routines,games & routines,9678,10
+'vil','wanna/want to',23,260,games & routines,games & routines,1848716,138
+'å jobbe','work',25,340,action words,predicates,192166,1
+'å bite','bite',24,280,action words,predicates,17348,7
+'å blåse','blow',22,260,action words,predicates,19567,16
+'å bråke','brawl',26,420,action words,predicates,2476,22
+'å bygge','build',23,300,action words,predicates,172286,19
+'å bære','carry',23,280,action words,predicates,44847,10
+'å danse','dance',22,160,action words,predicates,21390,20
+'å dele','share',25,380,action words,predicates,111880,7
+'å drikke','drink',20,120,action words,predicates,43156,27
+'å dytte','push',25,340,action words,predicates,7857,6
+'å elske','love',32,620,action words,predicates,3733,1
+'å fange','catch',28,520,action words,predicates,26887,13
+'å falle','fall',25,340,action words,predicates,108342,28
+'å finne','find',24,340,action words,predicates,551966,136
+'å forte seg','hurry',26,480,action words,predicates,152,7
+'å få','get',22,200,action words,predicates,2396707,287
+'å gi','give',26,420,action words,predicates,891875,19
+'å gjemme','hide',26,380,action words,predicates,12187,15
+'gjøre seg ferdig','finish',30,560,action words,predicates,625,1
+'å gli','slide',28,520,action words,predicates,17619,1
+'å gråte','cry',24,280,action words,predicates,13366,7
+'å gå','walk',22,180,action words,predicates,1297942,312
+'å ha','have',23,320,action words,predicates,8429287,1174
+'å hate','hate',NA,NA,action words,predicates,25992,1
+'å helle','pour',28,540,action words,predicates,8838,5
+'å hente','get',23,260,action words,predicates,95263,42
+'å hjelpe','help',22,220,action words,predicates,144856,34
+'å holde','hold',25,340,action words,predicates,372390,43
+'å holde øye med','watch',NA,NA,action words,predicates,818,1
+'å hoppe','jump',20,140,action words,predicates,31778,24
+'å huske','swing',25,300,action words,predicates,NA,NA
+'å høre','hear',25,340,action words,predicates,233345,56
+'høre etter','listen',31,600,action words,predicates,803,1
+'følge etter','follow',31,600,action words,predicates,5656,1
+'å kaste','throw',23,240,action words,predicates,68891,29
+'å kile','tickle',25,360,action words,predicates,1701,3
+'å kjøpe','buy',25,380,action words,predicates,255029,13
+'å kjøre','drive',23,240,action words,predicates,145844,89
+'å klappe','clap',23,240,action words,predicates,5766,3
+'å klatre','climb',25,360,action words,predicates,10674,15
+'å klemme','hug',25,360,action words,predicates,7732,4
+'å kle på','dress',23,320,action words,predicates,2010,1
+'å koste',cost/sweep',26,400,action words,predicates,NA,NA
+'å kysse','kiss',25,360,action words,predicates,11868,2
+'å lage mat','cook',25,340,action words,predicates,3671,1
+'late som','pretend',32,620,action words,predicates,5519,1
+'å putte','put',26,440,action words,predicates,14269,38
+'å legge','put',23,280,action words,predicates,629383,63
+'å leke','toy',22,200,action words,predicates,26869,69
+'å lese','read',21,160,action words,predicates,264653,77
+'å like','like',26,420,action words,predicates,153782,28
+'å lukke','close',25,380,action words,predicates,18704,20
+'å løpe','run',23,280,action words,predicates,48219,49
+'å male','paint',25,320,action words,predicates,23491,41
+'å mate','feed',28,500,action words,predicates,4581,2
+'å miste','loose',25,380,action words,predicates,87531,13
+'å reparere','repair',28,500,action words,predicates,6683,8
+'å passe','fit',26,400,action words,predicates,89523,38
+'å plaske','splash',26,400,action words,predicates,756,1
+'å prøve','try',26,460,action words,predicates,223301,67
+'puste','breathe',30,580,action words,predicates,11258,7
+'å ri','ride',29,560,action words,predicates,22478,8
+'riste','shake',29,520,action words,predicates,8566,2
+'rive av','rip',30,580,action words,predicates,1250,1
+'å rydde','tidy',23,260,action words,predicates,22236,9
+'å røre','touch',26,400,action words,predicates,12537,4
+'å se','look',18,60,action words,predicates,1566932,933
+'å se på (TV)','look at',25,340,action words,predicates,152869,1
+'å sette','put',26,440,action words,predicates,416323,79
+'å si','say',26,400,action words,predicates,1464840,387
+'å sitte','sit',20,180,action words,predicates,224252,193
+'å skjære','cut',26,440,action words,predicates,10296,5
+'å skli','slip',24,320,action words,predicates,6534,5
+'å skrive','write',26,460,action words,predicates,648363,3
+'å skynde seg','hurry',28,520,action words,predicates,940,7
+'å slikke','lick',28,520,action words,predicates,8204,2
+'å slutte','finish',25,420,action words,predicates,68314,3
+'å slå','hit',24,300,action words,predicates,186927,30
+'å smake','taste',23,320,action words,predicates,23745,9
+'å smile','smile',26,400,action words,predicates,29058,2
+'å snakke','talk',25,400,action words,predicates,184454,29
+'å sove','sleep',21,180,action words,predicates,40794,51
+'å sparke','kick',25,400,action words,predicates,17049,9
+'å spille','play',25,400,action words,predicates,306904,41
+'å spise','eat',20,160,action words,predicates,104732,115
+'å stikke','sting',30,560,action words,predicates,36577,6
+'å stoppe','stop',26,440,action words,predicates,72269,6
+'å stå','stand',25,340,action words,predicates,523907,145
+'å synge','sing',23,260,action words,predicates,47677,32
+'å svømme','swim',26,440,action words,predicates,7226,4
+'å søle','spill',25,340,action words,predicates,1123,2
+'å ta','take',25,340,action words,predicates,1419661,296
+'å tegne','draw',22,160,action words,predicates,25212,114
+'å tenke','think',30,580,action words,predicates,311411,42
+å treffe','meet',31,600,action words,predicates,56006,2
+'å dra','go',26,460,action words,predicates,148743,5
+'å tørke','dry',23,300,action words,predicates,9544,16
+'å vaske','wash',22,200,action words,predicates,19396,10
+'å vente','wait',25,400,action words,predicates,129451,8
+'slå seg','hurt oneself',25,380,action words,predicates,9539,1
+'å vise','show',26,420,action words,predicates,470932,63
+'å velte','overturn',30,540,action words,predicates,5760,16
+'være glad i','be fond of',27,520,action words,predicates,9388,1
+'å våkne','wake',25,400,action words,predicates,23206,2
+'å ødelegge','break',25,380,action words,predicates,51755,1
+'å ønske','wish',30,580,action words,predicates,328796,2
+'å åpne','open',23,240,action words,predicates,111606,16
+'bedre','better',29,560,descriptive words,predicates,349680,1
+'blå','blue',25,320,descriptive words,predicates,31961,32
+'bløt','soft/wet',32,600,descriptive words,predicates,3020,2
+'borte','away',20,100,descriptive words,predicates,56747,56
+'bra','good',25,400,descriptive words,predicates,354111,64
+'bråkete','noisy',28,460,descriptive words,predicates,614,2
+'brun','brown',29,520,descriptive words,predicates,16214,4
+'dårlig','bad',30,580,descriptive words,predicates,227001,3
+ekkel','yucky',27,480,descriptive words,predicates,8620,4
+'fin','fine',23,260,descriptive words,predicates,240979,241
+'forsiktig','careful',26,400,descriptive words,predicates,32764,10
+'først','first',26,400,descriptive words,predicates,178986,37
+'fort','fast',25,340,descriptive words,predicates,94174,25
+'frekk','cheeky',NA,NA,descriptive words,predicates,8977,2
+'full','full',28,560,descriptive words,predicates,211567,8
+'gammel','old',27,460,descriptive words,predicates,342030,18
+'glad','happy',26,420,descriptive words,predicates,93604,14
+'god','good',25,420,descriptive words,predicates,1920301,182
+'grønn','green',25,380,descriptive words,predicates,43341,18
+'gul','yellow',25,360,descriptive words,predicates,30966,23
+'hard','hard',26,520,descriptive words,predicates,103135,13
+'høy','high',29,540,descriptive words,predicates,310687,29
+'hvit','white',27,460,descriptive words,predicates,70380,9
+'kald','cold',23,260,descriptive words,predicates,45169,13
+'klissete','sticky',29,500,descriptive words,predicates,1051,1
+'lang','long',28,520,descriptive words,predicates,517593,35
+'lei seg','sad',24,340,descriptive words,predicates,2569,1
+'liten','small',25,340,descriptive words,predicates,828607,144
+mørk','dark',24,300,descriptive words,predicates,44729,3
+'ny','new',26,400,descriptive words,predicates,1167123,21
+'ødelagt','broken',24,280,descriptive words,predicates,18472,10
+'oransje','orange',29,540,descriptive words,predicates,3395,1
+'pen','pretty',32,600,descriptive words,predicates,47091,15
+'rar','nice',30,580,descriptive words,predicates,60473,105
+'redd','scared',26,440,descriptive words,predicates,53509,11
+'ren','clean',26,460,descriptive words,predicates,91341,3
+'rød','red',25,320,descriptive words,predicates,68611,44
+'sen','late',32,640,descriptive words,predicates,177291,2
+'sint','mad',25,380,descriptive words,predicates,13869,24
+'sist','last',32,620,descriptive words,predicates,420404,15
+'sitter fast','stuck',24,300,descriptive words,predicates,2000,1
+'skitten','dirty',25,340,descriptive words,predicates,7480,4
+'skjønn','beautiful',NA,NA,descriptive words,predicates,12524,1
+'slem','bad',28,500,descriptive words,predicates,5791,8
+'snill','kind',24,340,descriptive words,predicates,31313,22
+'søt','cute',28,560,descriptive words,predicates,32482,5
+'søvnig','sleepy',NA,NA,descriptive words,predicates,921,1
+'stakkars','poor',26,480,descriptive words,predicates,10597,2
+'stille','quiet',26,440,descriptive words,predicates,54841,26
+'stor','big',23,240,descriptive words,predicates,1307694,62
+'sulten','hungry',25,340,descriptive words,predicates,8876,7
+'sur','grumpy',30,600,descriptive words,predicates,23512,4
+'svart','black',27,460,descriptive words,predicates,45765,8
+'syk','sick',26,400,descriptive words,predicates,56929,1
+'tom','empty',23,260,descriptive words,predicates,36694,5
+'tørr','dry',28,540,descriptive words,predicates,23950,3
+'tørst','thirsty',22,200,descriptive words,predicates,2135,5
+'trøtt','tired',24,300,descriptive words,predicates,9729,4
+'tung','heavy',26,440,descriptive words,predicates,59220,10
+'våken','awake',25,360,descriptive words,predicates,7936,5
+'varm','hot',23,260,descriptive words,predicates,58220,22
+'våt','wet',23,240,descriptive words,predicates,18513,9
+vond','painful',23,260,descriptive words,predicates,129422,19
+'en dag','day',26,360,NA,NA,1074722,62
+'etter','after',31,580,NA,NA,1137455,23
+'ettermiddag','afternoon',NA,NA,NA,NA,29317,3
+'etterpå','afterwords',25,360,NA,NA,36076,29
+'før','before',30,580,NA,NA,598533,41
+'formiddag','morning',NA,NA,NA,NA,14515,2
+'i dag','today',27,440,NA,NA,394236,2
+'i går','yesterday',30,580,NA,NA,83408,7
+'i kveld','tonight',32,620,NA,NA,2709,2
+'i morgen','tomorrow',28,460,NA,NA,37720,7
+'en kveld','evening',28,520,NA,NA,123627,2
+'morgen','morning',28,520,NA,NA,46248,2
+'nå','now',25,400,NA,NA,1120297,461
+'ei natt','night',24,260,NA,NA,73005,4
+'senere','later',30,580,NA,NA,125096,1
+'ei tid','time',NA,660,NA,NA,644085,11
+'de','they',32,600,closed-class items,closed-class,2911837,481
+'deg','you (sg)',28,460,closed-class items,closed-class,654317,8
+'deg selv','yourself',NA,NA,closed-class items,closed-class,33409,1
+'dem','them',36,660,closed-class items,closed-class,462725,39
+'den','it/that',22,240,closed-class items,closed-class,3864873,1619
+'denne','this',25,360,closed-class items,closed-class,1053753,31
+'dere','you (pl)',31,580,closed-class items,closed-class,406134,53
+'deres','your(s) (pl)/their(s)',34,660,closed-class items,closed-class,201042,3
+'det','it/that',26,420,closed-class items,closed-class,11278389,4917
+'dette','this',30,580,closed-class items,closed-class,2010675,100
+'din','your(s) (sg)',24,280,closed-class items,closed-class,304988,234
+'disse','these',33,620,closed-class items,closed-class,492410,17
+'du','you (sg)',25,360,closed-class items,closed-class,2804710,3448
+'ham','him',NA,NA,closed-class items,closed-class,172668,3
+'han','he',26,440,closed-class items,closed-class,2209568,855
+'hans','his',32,620,closed-class items,closed-class,261100,10
+'henne','her',35,660,closed-class items,closed-class,170695,12
+'hennes','her(s)',34,640,closed-class items,closed-class,120798,3
+'hun','she',28,520,closed-class items,closed-class,1000080,238
+'hverandre','each other',36,660,closed-class items,closed-class,101055,15
+'jeg','I',24,320,closed-class items,closed-class,4816307,906
+'man','one',NA,NA,closed-class items,closed-class,1383204,55
+'meg','me',25,380,closed-class items,closed-class,1000527,2
+'meg selv','myself',35,660,closed-class items,closed-class,25540,1
+'min','my/mine',19,100,closed-class items,closed-class,496463,45
+'oss','us',30,580,closed-class items,closed-class,600133,26
+'seg','himself/herself',32,620,closed-class items,closed-class,2050589,95
+'seg selv','himself/herself',NA,NA,closed-class items,closed-class,130150,1
+'sin','his/her',25,360,closed-class items,closed-class,1393825,123
+'vår','our(s)',30,560,closed-class items,closed-class,499327,14
+'vi','we',28,520,closed-class items,closed-class,3387355,1111
+'hva','what',26,420,closed-class items,closed-class,859118,1533
+'hvem','who',28,520,closed-class items,closed-class,159251,131
+'hvilken','which',35,660,closed-class items,closed-class,240992,70
+'hvor','where',26,420,closed-class items,closed-class,660990,268
+'hvordan','how',35,660,closed-class items,closed-class,435967,33
+'hvorfor','why',30,580,closed-class items,closed-class,187443,40
+'når','when',32,620,closed-class items,closed-class,1086512,123
+'av','by',26,440,closed-class items,closed-class,7737060,208
+'bak','behind',26,400,closed-class items,closed-class,156733,25
+'bort','away',26,480,closed-class items,closed-class,118510,69
+'borte','away',20,180,closed-class items,closed-class,56747,56
+'der','there',19,60,closed-class items,closed-class,742743,1206
+'for','for',33,600,closed-class items,closed-class,6939412,521
+'foran','in front of',29,540,closed-class items,closed-class,95023,11
+'fra','from',30,560,closed-class items,closed-class,2696389,29
+'frem','forward',33,620,closed-class items,closed-class,210978,7
+'gjennom','through',28,560,closed-class items,closed-class,360696,4
+'her','here',23,280,closed-class items,closed-class,1050636,423
+'hit','here (hither)',26,480,closed-class items,closed-class,25403,14
+'hjem','home',23,260,closed-class items,closed-class,105920,7
+'hjemme','(at) home',24,360,closed-class items,closed-class,102855,6
+'hos','at',29,540,closed-class items,closed-class,278021,18
+'i','at',25,380,closed-class items,closed-class,15141908,548
+'i stedet for','instead of',NA,NA,closed-class items,closed-class,32260,12
+'inn','inside',23,200,closed-class items,closed-class,911258,61
+'inne','inside',25,320,closed-class items,closed-class,117267,21
+'inni','inside',26,400,closed-class items,closed-class,17319,42
+'med','with',26,480,closed-class items,closed-class,6630707,329
+'mot','towards/against',35,660,closed-class items,closed-class,849778,5
+'ned','down',23,260,closed-class items,closed-class,368446,85
+'nede','down(stairs)',26,460,closed-class items,closed-class,41226,10
+'nedi','down in',29,560,closed-class items,closed-class,2754,9
+'om','about',34,620,closed-class items,closed-class,3259965,137
+'opp','up',21,160,closed-class items,closed-class,1016524,139
+'oppå','on top of',26,440,closed-class items,closed-class,8110,58
+'oppe','up(stairs)',25,360,closed-class items,closed-class,42346,8
+'oppi','up in',26,400,closed-class items,closed-class,11144,174
+'over','over',29,540,closed-class items,closed-class,981095,17
+'på','on',25,380,closed-class items,closed-class,9507635,1064
+'til','to',26,440,closed-class items,closed-class,62579,376
+'tilbake','back',30,580,closed-class items,closed-class,285663,30
+'under','under',26,460,closed-class items,closed-class,543826,34
+'ut','outside',20,120,closed-class items,closed-class,1371838,181
+'ute','outside',23,220,closed-class items,closed-class,165881,62
+'utenfor','outside',35,660,closed-class items,closed-class,113560,7
+'utenpå','outside',35,680,closed-class items,closed-class,3592,5
+'ved siden av','next to',32,620,closed-class items,closed-class,29117,1
+'vekk','away',25,380,closed-class items,closed-class,43417,10
+'alle','everyone',25,380,closed-class items,closed-class,304512,15
+'alt','everything',28,520,closed-class items,closed-class,375299,29
+'andre','other(s)',32,580,closed-class items,closed-class,72801,13
+'den','it/that',20,180,closed-class items,closed-class,3887740,1619
+'det','it/that',26,460,closed-class items,closed-class,11291491,4917
+'ei','a',NA,680,closed-class items,closed-class,120367,1
+'en','a',26,460,closed-class items,closed-class,11415112,1019
+'en annen','another',32,600,closed-class items,closed-class,1478707,28
+'et','a',31,560,closed-class items,closed-class,3151715,3
+'hver','each',34,640,closed-class items,closed-class,396195,6
+'hvert','each',NA,NA,closed-class items,closed-class,143732,3
+'ikke','not',22,200,closed-class items,closed-class,5202279,893
+'ingen','no one',26,460,closed-class items,closed-class,147321,15
+'ingenting','nothing',26,440,closed-class items,closed-class,70201,7
+'litt','a little',26,400,closed-class items,closed-class,821994,405
+'mange','many',25,340,closed-class items,closed-class,1748921,86
+'mer','more',19,100,closed-class items,closed-class,1529227,2
+'mye','a lot',26,420,closed-class items,closed-class,2742433,166
+'noe','something',32,620,closed-class items,closed-class,744491,349
+'noen','someone',32,620,closed-class items,closed-class,414688,277
+'også','too',28,540,closed-class items,closed-class,1680324,292
+'samme','same',29,540,closed-class items,closed-class,434827,21
+'å bli','be(come)',28,520,closed-class items,closed-class,3721974,178
+'bør','should',NA,NA,closed-class items,closed-class,324893,1
+'å burde','should',NA,NA,closed-class items,closed-class,469501,4
+'er','is',26,420,closed-class items,closed-class,12115790,15
+'få','get',24,260,closed-class items,closed-class,2396707,287
+'gjør','does',28,480,closed-class items,closed-class,475020,320
+'gjorde','did',31,600,closed-class items,closed-class,149517,52
+'å gjøre','do',27,440,closed-class items,closed-class,1340396,488
+'å ha','have',23,280,closed-class items,closed-class,73111,1174
+'hadde','had',30,560,closed-class items,closed-class,1000755,2
+'har','has',26,460,closed-class items,closed-class,6229512,10
+'kan','can',26,420,closed-class items,closed-class,2851732,3
+'å kunne','could',NA,680,closed-class items,closed-class,3456913,742
+'å la','let',34,640,closed-class items,closed-class,170816,7
+'må','have to',26,460,closed-class items,closed-class,1121332,5
+'å måtte','had to',34,620,closed-class items,closed-class,1355908,242
+'skal','will',26,440,closed-class items,closed-class,1837061,3
+'å skulle','would',34,660,closed-class items,closed-class,2295140,1152
+'å være','be',29,560,closed-class items,closed-class,16594833,4419
+'var','was',32,600,closed-class items,closed-class,2446938,6
+'vil','wanna/want to',25,380,closed-class items,closed-class,1814650,4
+'å ville','would',32,620,closed-class items,closed-class,2183940,161
+'at','that',32,600,closed-class items,closed-class,6016756,215
+'eller','or',31,580,closed-class items,closed-class,1705360,210
+'for','for',34,620,closed-class items,closed-class,352478,521
+'fordi','because',34,640,closed-class items,closed-class,320966,12
+'hvis','if',35,660,closed-class items,closed-class,498529,86
+'men','but',33,600,closed-class items,closed-class,3015440,444
+'og','and',25,400,closed-class items,closed-class,16079937,1074
+'så','then',31,580,closed-class items,closed-class,2141716,900
+'som','that',32,600,closed-class items,closed-class,5486715,402

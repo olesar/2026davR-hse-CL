@@ -1,0 +1,304 @@
+---
+title: "Model selection"
+output: html_document
+date: "2024-03-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Метрики выбора моделей (обобщение)
+
+![Basic formula for the linear regression](fig/LM_formula.png)
+
+-   Root Mean Squared Error (RMSE): 
+$$
+RMSE = \sqrt{\frac{1}{n}\Sigma_{i=1}^{n}(y_i - \hat{y_i})^2}
+$$ 
+    -- показывает отклонение наблюдаемых значений (непрерывная величина $y$) от предсказанного моделью ($\hat{y}$) -- возведение в квадрат штрафует большие отклонения
+
+-   Mean Absolute Error (MAE) 
+$$
+MAE = \frac{1}{n}\Sigma_{i=1}^{n}|y_i - \hat{y_i}|
+$$
+    -- то же, но модуль вместо квадрата
+
+-   $R^2$ - коэффициент детерминации R squared ($0 \lt R^2 \lt 1$, чем ближе к 1, тем лучше) - метрика на основе остатков (residuals) модели.  
+NB проблемма чрезмерной аппроксимации (overfitting), если, например, $R^2$ \> 99%  
+
+-   Adjusted $R^2$ - метрика со штрафом за количество предикторов в модели: 
+$$
+Adj_R2 = 1 - (((1-R_Squared)*(n-1))/(n-k-1))
+$$ 
+где _n_ -- количество точек наблюдения в датасете, _k_ -- количество предикторов в модели\
+    -- 0 \< $Adj R^2$ \< 1, чем ближе к 1, тем лучше
+
+-   Mallow's C (Mallow's $C_p$) -- сравнивает качество модели с идеальной - в такой, где есть все нужные предикторы и нет ненужных.  
+    ![Mallow\'s C](https://github.com/olesar/2023dav4compling/blob/main/fig/MallowsCp.jpeg?raw=true) 
+    -- если значение Mallow's $C_p$ около k + 1, то наша модель лучше, чем идеальная. Если значение больше, чем k + 1, то модель хуже, чем идеальная и значит, существуют модели с лучшем качеством и меньшим количеством предикторов. Если $C_p$ сильно меньше k + 1, то значит, что мы вовсе упустили в модели важный предиктор(ы).  
+    Рассчитывается на основе Residual Errors:  
+    $$
+    Cp = \frac{SSEk}{MSEall} + 2(k+1)-n
+    $$
+где k -- количество предикторов в нашей модели, n -- общее количество предикторов в модели. Из смещения (bias) предсказанных значений и дисперсии остатков оценивает последнее. Не применяется к оценке полной модели (со всеми предикторами), потому что она - основа для сравнения. 
+
+-   AIC - Akaike Information Criterion
+и
+-   BIC - Bayesian Information Criterion (Критерий Шварца, SC) -- обе метрики основаны на понятии энтропии (information entropy) и призваны штрафовать слишком сложные модели\
+    -- чем ближе AIС и BIC к нулю, тем лучше (ср. $R^2$!) -- в формуле учитывается максимальное правдоподобие (maximum log-likelihood) и количество параметров в модели\
+    $$
+    AIC = 2 * k - 2 * ln(\hat{logLik})
+    $$ -- где k - количество параметров в модели  
+    -- $\hat{logLik}$ - максимальное значение функции правдоподобия  
+
+$$
+    BIC = k * ln(n) - 2 * ln(\hat{logLik})
+$$   
+    -- штраф BIC за лишние переменные сильнее
+    -- еще бывает критерий Ханнана-Куинна (HQC), где штраф за лишние переменные мягче
+    
+    Вероятность ошибиться в выборе оптимальной модели расчитывается по формуле: 
+    
+ $$
+    P = exp(\frac{AIC_{min} - AIC}{2})
+$$   
+   
+
+    -- Если количество классов M \> 2 (мультиклассовая классификация)\
+$-\sum_{c=1}^My_{o,c}\log(p_{o,c})$
+
+    -- Negative Loglikelihood 
+$$ 
+NLL(y) = $-{\log(p(y))}$ 
+$$
+
+    -- Minimizing negative loglikelihood = 
+$$
+\min_{\theta} \sum_y {-\log(p(y;\theta))}
+$$
+    -- эквивалентна Maximum Likelihood Estimation(MLE):
+    $$ \max_{\theta} \prod_y p(y;\theta) $$
+
+-   REML (Restricted maximum likelihood) - ограниченное максимальное правдоподобие. Основана не на значении максимального правдоподобия (maximum likelihood fit of all the information), но на функции правдоподобия (что все данные могут быть описаны статистической моделью), при условии, что мы трансформировали данные так, чтобы неизвестные "неприятные" параметры (nuisance parameters) не влияли на модель.
+
+-   AUC (area under the ROC curve) - основана на векторе корректных и некорректных ответов модели Receiver Operating Characteristics ([ROC](https://www.r-bloggers.com/illustrated-guide-to-roc-and-auc/%5D(https://www.r-bloggers.com/illustrated-guide-to-roc-and-auc/)) ($0,5 \le AUC \le 1$, чем AUC больше, тем модель лучше, 0,5 - случайный ответ).
+
+```{r}
+library("tidyverse") 
+# включает пакет broom для перевода моделей в tidy-формат   
+
+head(mtcars)
+mtcats.lm <- lm(mpg ~ disp, data = mtcars)
+summary(mtcats.lm)
+broom::glance(mtcats.lm)
+```
+
+Функция `tidy` показывает табличную версию коэффициентов модели:
+
+```{r}
+mtcats.lm1 <- lm(mpg ~ disp + wt + hp + cyl + gear, data = mtcars) 
+summary(mtcats.lm)
+broom::tidy(mtcats.lm1)
+broom::glance(mtcats.lm1)
+```
+
+```{r}
+# yet another popular function for model metrics:
+performance::model_performance(mtcats.lm1)
+performance::compare_performance(mtcats.lm, mtcats.lm1, rank = TRUE)
+```
+
+```{r eval=FALSE}
+library(verification)
+head(mtcats.lm$responce)
+data<-data.frame(x,y)
+names(data)<-c("yes","no")
+roc.plot(data$yes, data$no)
+```
+
+### Полезные ссылки
+
+-   <https://towardsdatascience.com/maximum-likelihood-ml-vs-reml-78cf79bef2cf>
+
+## Динамические визуализации
+
+-   D3.js - визуализации на основе JavaScript
+-   пакет `htmlwidgets` для работы с JavaScript-визуализациями, особенно удобен для использований визуализаций в RMarkdown, Quarto HTML-документах и веб-приложениях `Shiny`. Основа для многих специализированных пакетов R с динамической визуализацией.
+
+```{r libraries}
+#install.packages("plotly")
+library(plotly)
+library(tidyverse)
+```
+
+Для начала возьмем код для статической визуализации
+
+```{r eval = FALSE}
+df <- read_tsv("https://raw.githubusercontent.com/Pozdniakov/tidy_stats/master/data/meta_dataset.txt")
+head(df)
+meta_2_gg <- ggplot(aes(x=Outcome_age, y=Effect_size, size=1/(SE^2), colour = Design, fill = Design), data=df %>% filter(Design != "School Age Cutoff")) +
+        geom_point(alpha=.55) +
+        geom_hline(yintercept=0, linetype="dotted") + 
+        theme_bw() + 
+        scale_x_continuous(breaks=c(20,30,40,50,60,70,80)) +
+        xlab("Age at outcome test (years)") +
+        ylab("Gain for 1 year of education\n(IQ points)") +
+        guides(size=FALSE, colour = FALSE, fill = FALSE) +
+        geom_smooth(method="lm", size=.5, alpha=.25) + 
+    ggtitle("Effect of education as a function of age at the outcome test")+ 
+        theme(plot.title = element_text(hjust=0.5)) +
+    facet_grid(Design~.)+
+    scale_colour_brewer(palette = "Set1")+
+    scale_fill_brewer(palette = "Set1")
+meta_2_gg
+
+
+ggplotly(meta_2_gg)
+```
+
+### Обертка `ggplotly()`
+
+Обернем в ggplotly():
+
+```{r eval = FALSE}
+ggplotly(meta_2_gg)
+```
+
+Наведение на курсора на точки открывает окно с дополнительной информацией о точке.
+
+```{r}
+#?ggplotly()
+```
+
+### Функция plot_ly
+
+Кастомизировать динамические визуализации лучше вручную с помощью функции `plot_ly()`. Особенность: В отличие от `ggplot`, используются не +. а пайпы (`%>%` или `|>`). Задание эстетик происходит с помощью `~`.
+
+```{r eval = FALSE}
+poli <- subset(df, subset=(Design=="Policy Change"))
+
+# static
+ggplot(aes(x=Outcome_age, y=Effect_size, size=1/(SE^2)), data=poli) +
+        geom_point(alpha=.55, colour="#BA1825") +
+        geom_hline(yintercept=0, linetype="dotted") + 
+        scale_x_continuous(breaks=c(20,30,40,50,60,70,80)) +
+        guides(size=F) +
+        geom_smooth(method="lm", colour="#BA1825",fill="#BA1825",size=.5, alpha=.25)
+
+plot_ly(poli, 
+        x = ~Outcome_age, 
+        y = ~Effect_size, 
+        size = ~1/(SE^2), 
+        color = ~Effect_size, 
+        sizes = c(40, 400),
+        text = ~paste("N: ", n, '<br>Country:', Country)) %>%
+  add_markers()
+```
+
+По ссылке можно найти информацию по атрибутам `plot_ly`: <https://plotly.com/r/reference>
+
+### Виджеты на основе htmlwidgets
+
+[htmlwidgets.org](http://gallery.htmlwidgets.org/)
+
+-   [echarts4r](https://echarts4r.john-coene.com/articles/get_started.html)
+
+    -   аналог plotly, синтаксис в логике tidyverse.
+
+-   [leaflet](https://rstudio.github.io/leaflet/) --- пакет с интерфейсом к JavaScript-библиотеке Leaflet для работы с картами. Но не единственный!
+
+-   [networkD3](http://christophergandrud.github.io/networkD3/) --- пакет для интерактивной визуализации (небольших) сетей.
+
+-   [gganimate](https://www.datanovia.com/en/blog/gganimate-how-to-create-plots-with-beautiful-animation-in-r): How to Create Plots with Beautiful Animation in R
+
+### Задание
+
+-   Используйте [данные](https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/RNCpoetryLocation.txt) поэтического корпуса НКРЯ для динамической визуализации барплотов во времени с помощью библиотеки `gganimate`. Визуализация должна показывать, как самые продуктивные регионы создания поэтических произведений, отсортированные от большего к меньшему, меняются во времени. Советуем задать пороги времени создания текстов - после 1800 и до 1991 года.
+
+-   `Location` -- locations, mostly given by authors\
+
+-   `Coarse` -- less detailed and corrected data\
+
+-   `Region` -- country or county
+
+-   `Region2` -- macro-region\
+
+-   `Decade` -- decade of text creation\
+
+-   `Freq` -- the number of texts created within the decade\
+
+-   `E` -- latude (North/South)\
+
+-   `N` -- longitude (East/West)
+
+Необходимые данные для создания визуализации - `Region1` или `Region2`, `Decade`, `Freq`.
+
+```{r}
+geo0 <- read_tsv("https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/RNCpoetryLocation.txt")
+```
+
+Подсказки:
+
+```{r}
+min(geo0$Decade)
+geo <- geo0 %>%
+  filter(Decade < '1991') %>%
+  group_by(Reg=Region2, Time=as.numeric(Decade)) %>%
+  summarize(Ndoc = sum(Freq)) %>%
+  ungroup()
+str(geo)
+```
+
+Generate a list of all decades from 1760s - 1970s.
+
+```{r}
+all_decades <- data.frame(Time = seq(1761, 1971, 10))
+str(all_decades)
+```
+
+Generate a list of all regions.
+
+```{r}
+all_regions <- geo %>% distinct(Reg)
+all_regions_brev <- data.frame(Reg=all_regions, RegEng=c("US", "Far East", "Europe", "Caucasus", "Moscow", "Petersburg", "Volga", "Baltic", "North", "NWest", "Siberia", "Mediterranean", "Mid Asia", "Ukraine+", "Ural", "Central", "Black See", "South"))
+str(all_regions_brev)
+```
+
+Create all combinations of regions and decades we need for the final dataset.
+
+```{r}
+all_combos <- merge(all_regions_brev, all_decades, all = T)
+```
+
+Add rows for all years (currently blank) to our existing dataset for each city
+
+```{r}
+all_data_interp <- merge(geo, all_combos, all.y = T) 
+```
+
+Here we calculate the ranked list of regions for each decade.
+
+```{r}
+all_data_interp$Ndoc[is.na(all_data_interp$Ndoc)] = 0
+df <- all_data_interp %>%
+         complete(Time, fill=list(Ndoc=0)) %>% 
+         arrange(Time) %>%  
+         group_by(Reg) %>%
+         mutate(Ndoc_cum = cumsum(Ndoc), Time=Time+9) %>%
+         ungroup() %>%
+# and than make a rating within each decade
+         group_by(Time) %>%
+         arrange(-Ndoc_cum) %>%
+         mutate(Rank=row_number()) %>%
+         arrange(Time, Rank) %>% 
+         mutate(order = 1:n(), 
+                Ndoc_cum_lbl = paste0(" ",round(Ndoc_cum/1))) %>%
+         ungroup()
+```
+
+### Лингвистические приложения на Shiny
+
+-   [МультиДагестан](https://multidagestan.com/fieldtrips#expedition=%22Kina%2C%20Gelmets%2C%20Ikhrek%2C%20Mikik%2C%20Kurdul%22) - динамические визуализации атласа мультиязычия Дагестана (социолингвистическая информация)
+
+-   

@@ -1,0 +1,430 @@
+---
+title: "Lab9_mixed-effect models"
+output:
+  html_document: default
+  pdf_document: default
+date: "2024-03-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Линейная модель со смешанными эффектами
+
+Презентация М. Варфоломеевой, В. Хайтова (2022), Смешанные линейные модели - случайный интерсепт и случайный угол наклона [pdf](https://varmara.github.io/linmodr/15.1_GLMM_gaussian_random_intercept_slope.pdf)
+
+В качестве примера мы попробуем поиграть с [законом Хердана-Хипса](https://en.wikipedia.org/wiki/Heaps%27_law), описывающий взаимосвязь количества уникальных слов в тексте в зависимости от длины текста. В датасете собраны некоторые корпуса Universal Dependencies [@ud20] и некоторые числа, посчитанные на их основании:
+
+```{r, message=FALSE}
+library(tidyverse)
+ud <- read_csv("https://raw.githubusercontent.com/agricolamz/2021_da4l/master/data/ud_corpora.csv")
+ud %>% 
+  ggplot(aes(n_words, n_tokens))+
+  geom_point()+
+  facet_wrap(~corpus, scale = "free")+
+  geom_smooth(method = "lm", se = FALSE)+
+  labs(x = "количество слов", 
+       y = "количество уникальных слов",
+       caption = "данные корпусов Universal Dependencies")
+```
+
+Связь между переменными безусловно линейная, однако в разных корпусах представлена разная перспектива: для каких-то корпусов, видимо, тексты специально нарезались, так что тексты таких корпусов содержат от 30-40 до 50-80 слов, а какие-то оставались не тронутыми. Чтобы показать, что связь есть, нельзя просто "слить" все наблюдения в один котел (см. [парадокс Симпсона](https://en.wikipedia.org/wiki/Simpson%27s_paradox)), так как это нарушит предположение регрессии о независимости наблюдений. Мы не можем включить переменную `corpus` в качестве dummy-переменной: тогда один из корпусов попадет в интерсепт (станет своего рода базовым уровенем), а остальные будут от него отсчитываться. К тому же не очень понятно, как работать с новыми данными из других корпусов: ведь мы хотим предсказывать значения обобщенно, вне зависимости от корпуса.
+
+При моделировании при помощи моделей со случайными эффектами различают:
+
+* *основные эффекты* -- это те связи, которые нас интересуют, независимые переменные (количество слов, количество уникальных слов);
+* *случайные эффекты* -- это те переменные, которые создают группировку в данных (корпус).
+
+В результате моделирования появляется обобщенная модель, которая игнорирует группировку, а потом для каждого значения случайного эффекта генерируется своя регрессия, отсчитывая от обобщенной модели как от базового уровня.
+
+Рассмотрим простейший случай:
+
+```{r, message = FALSE}
+library(lme4)
+library(lmerTest)
+fit0 <- lm(n_tokens~n_words, data = ud)
+summary(fit0)
+fit1 <- lmer(n_tokens~n_words+(1|corpus), data = ud)
+summary(fit1)
+ud %>% 
+  mutate(predicted = predict(fit1)) %>% 
+  ggplot(aes(n_words, n_tokens))+
+  geom_point()+
+  facet_wrap(~corpus, scale = "free")+
+  geom_line(aes(y = predicted), color = "red") +
+  labs(x = "количество слов", 
+       y = "количество уникальных слов",
+       caption = "данные корпусов Universal Dependencies")
+```
+
+Можно посмотреть на предсказания модели (основные эффекты):
+
+```{r}
+library(ggeffects)
+ggeffect(fit1) %>% 
+  plot()
+```
+
+```{block, type = "rmdtask"}
+Визуализируйте полученные модели при помощи функции `plot()`. Какие ограничения на применение линейной регрессии нарушается в наших моделях?
+```
+
+```{r}
+plot(fit1)
+```
+
+В данном случае мы предполагаем, что случайный эффект имеет случайный свободный член. Т.е. все получающиеся линии параллельны, так как имеют общий угловой коэффициент. Можно допустить большую свободу и сделать так, чтобы в случайном эффекте были не только интерсепт, но и свободный член:
+
+```{r}
+fit2 <- lmer(n_tokens~n_words+(1+n_words|corpus), data = ud)
+summary(fit2)
+ud %>% 
+  mutate(predicted = predict(fit2)) %>% 
+  ggplot(aes(n_words, n_tokens))+
+  geom_point()+
+  facet_wrap(~corpus, scale = "free")+
+  geom_line(aes(y = predicted), color = "red") +
+  labs(x = "количество слов", 
+       y = "количество уникальных слов",
+       caption = "данные корпусов Universal Dependencies")
+```
+
+
+Можно посмотреть на предсказания модели (основные эффекты):
+
+```{r}
+ggeffect(fit2) %>% 
+  plot()
+```
+
+Нарушения все те же:
+
+```{r}
+plot(fit2)
+```
+
+При желании мы можем также построить модель, в которой в случайном эффекте будет лишь угловой коэффициент, а свободный член будет фиксированным:
+
+```{r}
+fit3 <- lmer(n_tokens~n_words+(0+n_words|corpus), data = ud)
+summary(fit3)
+ud %>% 
+  mutate(predicted = predict(fit3)) %>% 
+  ggplot(aes(n_words, n_tokens))+
+  geom_point()+
+  facet_wrap(~corpus, scale = "free")+
+  geom_line(aes(y = predicted), color = "red") +
+  labs(x = "количество слов", 
+       y = "количество уникальных слов",
+       caption = "данные корпусов Universal Dependencies")
+```
+
+Линии получились очень похожими, но разными:
+
+![](images/lmer.gif)
+
+Можно посмотреть на предсказания модели (основные эффекты):
+
+```{r}
+ggeffect(fit3) %>% 
+  plot()
+```
+
+Нарушения все те же:
+
+```{r}
+plot(fit3)
+```
+
+Сравним полученные модели:
+```{r}
+anova(fit3, fit2, fit1)
+```
+
+```{block, type = "rmdtask"}
+Постройте модель со случайными угловым коэффициентом и свободным членом, устранив проблему, которую вы заметили в прошлом задании.
+```
+
+
+```{r, include = FALSE}
+ud %>% 
+  filter(corpus != "UD_Arabic-PADT") ->
+  ud2
+fit4 <- lmer(n_tokens~n_words+(n_words|corpus), data = ud2)
+summary(fit4)
+ud2 %>% 
+  mutate(predicted = predict(fit4)) %>% 
+  ggplot(aes(n_words, n_tokens))+
+  geom_point()+
+  facet_wrap(~corpus, scale = "free")+
+  geom_line(aes(y = predicted), color = "red") +
+  labs(x = "количество слов", 
+       y = "количество уникальных слов",
+       caption = "данные корпусов Universal Dependencies")
+```
+
+```{block, type = "rmdtask"}
+Пользуясь знаниями из предыдущих заданий, смоделируйте связь количества слов и количества существительных. С какими проблемами вы столкнулись?
+```
+
+```{r, include = FALSE, error=TRUE}
+ud %>% 
+  filter(corpus != "UD_Arabic-PADT") ->
+  ud2
+fit5 <- lmer(n_tokens~n_nouns+(n_nouns|corpus), data = ud2)
+summary(fit4)
+ud2 %>% 
+  mutate(predicted = predict(fit4)) %>% 
+  ggplot(aes(n_words, n_tokens))+
+  geom_point()+
+  facet_wrap(~corpus, scale = "free")+
+  geom_line(aes(y = predicted), color = "red") +
+  labs(x = "количество слов", 
+       y = "количество уникальных слов",
+       caption = "данные корпусов Universal Dependencies")
+```
+```{r}
+library(sjPlot)
+plot_model(fit2)
+```
+
+
+#### Исландские гласные
+
+Датасет основан на исследовании (Coretta 2017, https://goo.gl/NrfgJm). В диссертации рассматривается отношение между длительностью гласных и придыханием в согласных. Респондентами выступили 5 носителей исландского языка. Были собраны данные о длительности гласных перед аспрированными и неаспирированными согласными, с разным местом образования (артикуляции), в разных типах слогов и т.п.
+
+```{r}
+df <- read_csv("https://raw.githubusercontent.com/olesar/2023dav4compling/main/data/icelandic.csv")
+```
+
+### 1
+Выясните, каковы средние значения долготы гласного (`vowel.dur`) в данных, сгрупированных по `place` (месту артикуляции) и `speaker` (говорящим). 
+Визуализируйте распределения, показав все значения. 
+
+### 2
+Выясните, каковы средние значения долготы гласного (`vowel.dur`) в данных, сгрупированных по `word` (слову-стимулу). 
+Визуализируйте распределения, показав все значения. 
+
+### 3
+Постройте смешанную линейную регрессию, 
+где `place` - фиксированный эффект, а `speaker` - случайный эффект (random group intercept). 
+
+### 4
+Постройте смешанную линейную регрессию, 
+где `speaker` и `word` - случайный эффект. Имейте в виду, что случайные эффекты здесь вложены друг в друга (nested). Чтобы избежать перекрещивания эффектов, создайте новую переменную, которая в явном виде будет указывать на вложенность.  
+
+```{r}
+sample <- factor(df$speaker:df$word)
+
+fit2.WRONG <- lmer(vowel.dur ~ place + (1|speaker) + (1|word), data = df)  # treats the two random effects as if they are crossed
+df <- within(df, sample <- factor(speaker:word))
+summary(df$sample) 
+```
+
+
+
+```{r}
+#1
+df %>% 
+  group_by(place, speaker) %>% 
+  summarise(mean(vowel.dur))
+  
+df %>% 
+  ggplot(aes(place, vowel.dur)) + 
+    geom_point(alpha = 0.2) + 
+    facet_wrap(~ speaker) + 
+    xlab("place of articulation") + 
+    ylab("vowel duration")
+#2    
+df %>% 
+  group_by(word) %>% 
+  summarise(mean(vowel.dur))
+  
+#3
+install.packages("lme4")
+library(lme4)
+fit <- lmer(vowel.dur ~ place + (1|speaker), data = df)
+summary(fit)
+plot(fit)
+## q-q plot
+qqnorm(resid(fit))
+qqline(resid(fit))
+``` 
+
+
+
+#### Полезности 
+
+* Common statistical tests are linear models [link](https://lindeloev.github.io/tests-as-linear/): t-test, ANOVA, correlation explained as lm.  
+
+* Cheat sheet for mixed-effect models [link](http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#webopen)  
+
+
+
+
+#### В качестве напоминания  
+
+* Дисперсия -- мера разброса значений наблюдений относительно среднего. 
+
+$$\sigma^2_X = \frac{\sum_{i = 1}^n(x_i - \bar{x})^2}{n - 1},$$
+
+где
+
+* $x_1, ..., x_n$ --- наблюдения;
+* $\bar{x}$ --- среднее всех наблюдений;
+* $X$ --- вектор всех наблюдений;
+* $n$ --- количество наблюдений.
+
+Представим, что у нас есть следующие данные:
+
+```{r, echo=T, fig.height=2}
+set.seed(42)
+df <- tibble(x = sort(rnorm(20, mean = 50, sd = 10)), 
+             y = seq_along(x))
+df %>% 
+  ggplot(aes(x)) +
+  geom_point(y = 0) +
+  ggrepel::geom_text_repel(aes(label = y), y = 0) +
+  labs(x = "значение наблюдений x")
+```
+
+Дисперсия - сумма квадратов расстояний от каждой точки до среднего выборки (пунктирная линия) разделенное на n - 1.
+
+```{r, echo = FALSE}
+df %>% 
+  mutate(positive_negative = x > mean(x)) %>% 
+  ggplot(aes(x, y))+
+  geom_vline(aes(xintercept = mean(x)), linetype = 2)+
+  geom_linerange(aes(xmin = x, 
+                     xmax = mean(x), 
+                     color = positive_negative),
+                 show.legend = FALSE) + 
+  annotate(geom = "text", x = 56, y = 1, label = "среднее x")+
+  geom_point()+
+  scale_y_continuous(breaks = df$y)+
+  labs(y = "номер наблюдений x",
+       x = "значение наблюдений x")
+```
+
+Распределения могут иметь одинаковое среднее, но разную дисперсию:
+
+```{r, echo=FALSE, message=FALSE}
+set.seed(42)
+map_dfr(1:5*5, function(x){
+  tibble(x = rnorm(20, mean = 50, sd = sqrt(x)),
+         var = round(var(x)))
+}) %>% 
+  group_by(var) %>% 
+  mutate(x = x - mean(x)+50) %>% 
+  ggplot(aes(x, factor(var)))+
+  geom_point()+
+  ggridges::geom_density_ridges(alpha = 0.2)+
+  geom_vline(aes(xintercept = mean(x)), linetype = 2)+
+  labs(x = "значение наблюдений",
+       y = "дисперсия наблюдений")
+```
+```{r}
+x <- rnorm(20, mean = 50, sd = 10)
+var(x)
+sd(x) # sqrt(var(x))
+```
+
+* Ковариация и корреляция - меры ассоциации двух переменных.
+
+$$cov(X, Y) = \frac{\sum_{i = 1}^n(x_i - \bar{x})(y_i-\bar{y})}{n - 1},$$
+$$\rho_{X,Y} = \frac{cov(X, Y)}{\sigma_X\times\sigma_Y} = \frac{1}{n-1}\times\sum_{i = 1}^n\left(\frac{x_i-\bar{x}}{\sigma_X}\times\frac{y_i-\bar{y}}{\sigma_Y}\right),$$
+
+для коэффициента корреляции Пирсона, где  
+
+* $(x_1, y_1), ..., (x_n, y_n)$ --- пары наблюдений;
+* $\bar{x}, \bar{y}$ --- средние наблюдений;
+* $X, Y$ --- векторы всех наблюдений;
+* $n$ --- количество наблюдений.
+
+Для таких данных:
+
+```{r, echo=FALSE}
+tibble(x = rnorm(30, mean = 50, sd = 10), 
+       y = x + rnorm(30, sd = 10)) %>% 
+  mutate(x = x - mean(x)+ 50,
+         y = y - mean(y)+ 55) ->
+  df
+df %>% 
+  ggplot(aes(x, y))+
+  geom_point()
+```
+
+Ковариацию можно представить графически следующим образом:
+
+```{r, echo = FALSE}
+df %>% 
+  ggplot(aes(x, y))+
+  geom_hline(aes(yintercept = mean(y)), linetype = 2)+
+  geom_vline(aes(xintercept = mean(x)), linetype = 2)+
+  geom_rect(aes(ymin = mean(y), ymax = y[which.max(x)], 
+                xmin = mean(x), xmax = max(x)), 
+            fill = "red", alpha = 0.01, show.legend = FALSE)+
+  geom_text(aes(x = mean(x)+4), y = 26, label = "среднее x", alpha = 0.05)+
+  geom_text(aes(y = mean(y)+2), x = 25, label = "среднее y", alpha = 0.05)+
+  geom_point()
+```
+
+Положительная ковариация - много красных квадратов, отрицательня ковариация - много синих.
+
+```{r, echo=FALSE}
+df %>% 
+  mutate(fill_color = (x > mean(x) & y > mean(y)) | (!x > mean(x) & !y > mean(y)),
+         fill_color = !fill_color) %>% 
+  ggplot(aes(x, y))+
+  geom_rect(aes(xmin = mean(x), xmax = x, 
+                ymin = mean(y), ymax = y, fill = fill_color, color = fill_color),
+            alpha = 0.1, show.legend = FALSE)+
+  geom_hline(aes(yintercept = mean(y)), linetype = 2)+
+  geom_vline(aes(xintercept = mean(x)), linetype = 2)+
+  geom_text(aes(x = mean(x)+4), y = 26, label = "среднее x", alpha = 0.05)+
+  geom_text(aes(y = mean(y)+2), x = 25, label = "среднее y", alpha = 0.05)+
+  geom_point()
+```
+
+Коэффициент корреляции Пирсона можно представить как среднее произведение $z$-нормализованных значений двух переменных.
+
+```{r, echo=FALSE}
+df %>% 
+  mutate_all(scale) %>% 
+  mutate(fill_color = (x > mean(x) & y > mean(y)) | (!x > mean(x) & !y > mean(y)),
+         fill_color = !fill_color) %>% 
+  ggplot(aes(x, y))+
+  geom_rect(aes(xmin = mean(x), xmax = x, 
+                ymin = mean(y), ymax = y, fill = fill_color, color = fill_color),
+            alpha = 0.1, show.legend = FALSE)+
+  geom_hline(aes(yintercept = mean(y)), linetype = 2)+
+  geom_vline(aes(xintercept = mean(x)), linetype = 2)+
+  geom_text(aes(x = mean(x)+0.8), y = -2, label = "нормализованное среднее x", alpha = 0.05)+
+  geom_text(aes(y = mean(y)+0.1), x = -1.6, label = "нормализованное среднее y", alpha = 0.05)+
+  geom_point()
+```
+Что можно сказать про корреляцию в следующих данных: 
+
+```{r, message = FALSE, warning=FALSE, echo = FALSE}
+set.seed(42)
+map_dfr(c(-0.5, -0.75, -0.95, 0.5, 0.75, 0.95), function(i){
+  MASS::mvrnorm(n=100, 
+                mu=rep(50,2), 
+                Sigma=matrix(i, nrow=2, ncol=2) + diag(2)*(1-i)) %>% 
+    as_tibble() %>% 
+    mutate(id = i) %>% 
+    rename(x = V1,
+           y = V2)}) %>% 
+  group_by(id) %>% 
+  mutate(cor = round(cor(x, y), 3)) %>%
+  ggplot(aes(x, y))+
+  geom_smooth(method = "lm", se = FALSE, color = "gray80")+
+  geom_point()+
+  facet_wrap(~cor, nrow = 2, scales = "free")+
+  labs(x = "", y = "")
+```
+
+В открытом доступе можно найти игры "Угадай корреляцию" [здесь](http://guessthecorrelation.com/) или [здесь](https://cheng-dsdp.shinyapps.io/CorApp/).
+
+
