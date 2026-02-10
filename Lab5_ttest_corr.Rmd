@@ -63,7 +63,7 @@ $z$-статистику по формуле:
 
 $$z = \frac{\overline{x} - \mu} {\sigma / \sqrt{N}} $$ $z$-статистика
 --- это выборочное среднее, из которого вычтено среднее в генеральной
-совокупносности согласно нашей гипотезе. Получившуюся разницу мы делим
+совокупности согласно нашей гипотезе. Получившуюся разницу мы делим
 на стандартную ошибку.
 
 ```{r}
@@ -141,7 +141,7 @@ p
 нулевую гипотезу, называется уровнем** $\alpha$. Это максимальный
 уровень ошибки, который мы допускаем в исследовании.
 
-Стандартный уровень $\alpha$ в научной литературе 0.05. Но это
+Стандартный уровень $\alpha$ в научной литературе 0.05 (5%). Но это
 условность, и есть рекомендации считать $\alpha=0.01$ в отдельных
 отраслях и при определенных дизайнах исследования.
 
@@ -184,8 +184,8 @@ t_normal_pdf_gg <- tibble(x = seq(-3, 3, .01),
        t_3 = dt(x, df = 3),
        t_10 = dt(x, df = 10),
        t_100 = dt(x, df = 100),
-       normal = dnorm(x)) %>%
-  pivot_longer(cols = -x, values_to = 'pdf', names_to = 'distribution') %>%
+       normal = dnorm(x)) |>
+  pivot_longer(cols = -x, values_to = 'pdf', names_to = 'distribution') |>
   ggplot(aes(x = x, y = pdf, colour = distribution))+
   geom_line()+
   theme_light()
@@ -250,29 +250,53 @@ t.test(samp, mu = 100)
 совокупности, 95% доверительный интервал для оценки среднего в
 генеральной совокупности, t-статистику, степени свобод и p-value.
 
-### Упражнение  
+### Упражнение 1  
 
-Возьмите датасет durationsOnt (Pluymaekers et al., 2005) из учебника Baayen 2008.
-Получите описательные статистики по переменной DurationPrefixNasal, постройте гистограмму. 
-Предположим, что предыдущие исследования показали, что средняя длительность этой переменной составляет 0.053. Верно ли, что среднее значение DurationPrefixNasal, полученное в данном эксперименте, значимо  отличается от 0.053?  
-Используйте критическое значение статистической значимости в 5%. 
+Возьмем датасет durationsOnt (Pluymaekers et al., 2005) из учебника Baayen 2008. Он содержит измерения длительности произнесения префикса ont- в устном корпусе нидерландского языка. Предположим, что предыдущие исследования показали, что средняя длительность переменной DurationPrefixNasal (длительность произнесения сегмента -n- в секундах) составляет 0.056. Верно ли, что среднее значение DurationPrefixNasal, полученное в данном эксперименте, значимо отличается от 0.056?  
 
-```{r}
+```{r durationsOnt data}
 # install.packages("languageR")
 library(languageR)
 data(durationsOnt)
-summary(durationsOnt$DurationPrefixNasal) 
 ```
 
-$H_1: mean(x) \ne 0.53$ 
+1. Получите описательные статистики по переменной DurationPrefixNasal, постройте гистограмму.  
+
+```{r durationsOnt1 summary}
+
+
+
+```
+
+2. Сформулируйте нулевую и альтернативную гипотезу.  
+```{text durationsOnt2 hypotheses}
+H0: 
+H1: 
+```
+
+3. Проведите одновыборочный t-test, для интерпретации используйте критическое значение статистической значимости в 5%. 
+
+```{r durationsOnt3 t-test}
+
+
+```
+4. Можем ли мы отвергнуть нулевую гипотезу? Сформулируйте ваши выводы о статистической значимости результатов.
+
+```{text durationsOnt4 test interpretation}
+
+
+```
+
+Пример: При проверке гипотезы о равенстве среднего в выборке 0,53 мы сформулировали нулевую и двустороннюю альтернативную гипотезу таким образом:
 
 $H_0: mean(x) = 0.53$ 
+$H_1: mean(x) \ne 0.53$ 
 
-Можем ли мы отвергнуть нулевую гипотезу? 
+И записали выводы так:
 
-t-тест показал, что мы можем отвергнуть нулевую гипотезу (t = -226.73, df = 101, p-value < 2.2e-16). Тем самым, среднее значение DurationPrefixNasal 0,05 статистически значимо отличается от 0.53. 
+Для проверки гипотезы о равенстве средней длительности назального сегмента 0,53 был проведен одновыборочный тест Стьюдента. Тест показал, что мы можем отвергнуть нулевую гипотезу (t = -226.73, df = 101, p-value < 2.2e-16). Тем самым, среднее значение DurationPrefixNasal в выборке (0,05) статистически значимо отличается от 0,53. 
 
-### Альтернативы
+### Односторонние альтернативные гипотезы (больше-меньше)  
 
 $H1: \mu1 > \mu_0$
 
@@ -281,9 +305,9 @@ my_sample <- c(80, 90, 100, 100, 130)
 mu0 <- 125
 mean(my_sample)
 t.test(my_sample, mu = mu0, alternative = 'less')
+
 x <- seq(-2.9881, 5, 0.01)
 curve(dt(t, df=4), from = -5, to=5, xname = 't')
-
 # add shading
 polygon(c(x[1], x, x[length(x)]), 
         c(0, dt(x, df=4), 0), col="steelblue")
@@ -298,11 +322,30 @@ polygon(c(x[1], x, x[length(x)]),
 ```
 p-value = 97%
 
+Проведем односторонние t-тесты для переменной DurationPrefixNasal из упражнения. В этот раз будем сравнивать со значением 0.054.
+
+```{r}
+t.test(durationsOnt$DurationPrefixNasal, mu = 0.054)  
+# H1: mean(DurationPrefixNasal) != 0.056
+# p-value 0.05089, не можем отвергнуть H0
+
+t.test(durationsOnt$DurationPrefixNasal, mu = 0.054, alternative = "less")  
+# H1: mean(DurationPrefixNasal) < 0.056
+# p-value 0.02544 (в два раза меньше!), можем отвергнуть H0
+
+t.test(durationsOnt$DurationPrefixNasal, mu = 0.054, alternative = "greater")
+# H1: mean(DurationPrefixNasal) > 0.056
+# p-value 0.9746, не можем отвергнуть H0
+```
+Обратите внимание, если p-value в t-тесте меньше критического значения 5%, его доверительный интервал (95% CI) пересекает 0.
+
+
 ## Двухвыборочный t-тест
 
 Тест на сравнение средних двух выборок. 
 $$H_0: \mu_1 = \mu_2$$
 $$H_1: \mu_1 \ne \mu_2$$
+
 ## Зависимый и независимый t-test.
 
 Зависимый - тест с повторными измерениями (или другими зависимостями, внутрииндивидуальный дизайн исследования).
@@ -343,41 +386,37 @@ $$t = \frac{\overline{x} - \mu} {s_x / \sqrt{N}} = \frac{\overline{d} - (\mu_1 -
 ```{r}
 library(tidyverse)
 diet <- readr::read_csv("https://raw.githubusercontent.com/Pozdniakov/tidy_stats/master/data/stcp-Rdataset-Diet.csv")
-diet1 <- diet %>%
-  filter(Diet == 1)
+diet1 <- diet |>
+  filter(Diet == 1) |>
+  droplevels()
 ```
 
-Провести двухвыборочный t-тест можно в R двумя базовыми способами.
-Первый вариант - это дать два вектора значений. Это удобно в случае
-широкого формата данных.
+Чтобы провести двухвыборочный зависимый t-тест, передадим функции `t.test` два вектора одинаковой (!) длины. Это удобно в случае широкого формата данных.
 
 ```{r}
 t.test(diet1$pre.weight, diet1$weight6weeks, paired = TRUE)
 ```
-
-Второй вариант - используя формулы. Это удобно при длинном формате
-данных:
-
-```{r}
-diet1_long <- diet1 %>%
-  pivot_longer(
-  cols = c(pre.weight, weight6weeks),
-  names_to = "when",
-  values_to = "weight"
-  )
-  
-
-t.test(weight ~ when, data = diet1_long, paired = TRUE)
-t.test(diet1_long$weight ~ diet1_long$when, paired = TRUE)
-```
-
-В обоих вариантах мы использовали `paired = TRUE` , чтобы обозначить
-использование именно зависимого (т.е. парного) t-теста.
+Мы указали `paired = TRUE` , чтобы обозначить использование именно зависимого (т.е. парного) t-теста.
 
 | Внутрииндивидуальный план    | Межиндивидуальный план        |
 |------------------------------|-------------------------------|
 | Зависимый t-тест             | Независимый t-тест            |
 | `t.test(..., paired = TRUE)` | `t.test(..., paired = FALSE)` |
+
+При длинном формате данных функция `t.test()` для зависимого теста будет выдавать ошибку, поскольку она не умеет сопоставлять данные при `paired = TRUE`. Но в независимом тесте (о котором речь ниже) это очень удобный формат.
+
+```{r, eval=FALSE}
+diet1_long <- diet1 |>
+  pivot_longer(
+  cols = c(pre.weight, weight6weeks),
+  names_to = "when",
+  values_to = "weight"
+  ) 
+
+#t.test(weight ~ when, data = diet2_long, paired = TRUE)
+```
+
+
 
 
 ## Двухвыборочный независимый t-тест
@@ -407,9 +446,9 @@ $$t = \frac {(m_1 - m_2) - (\mu_1 - \mu_2)} {se_{m_1 - m_2}} = \frac {(m_1 - m_2
 теперь уже поставим `paired = FALSE`:
 
 ```{r}
-diet12 <- diet %>%
+diet12 <- diet |>
   filter(Diet %in% 1:2)
-t.test(weight6weeks ~ Diet, data = diet12, paired = FALSE)
+t.test(weight6weeks ~ Diet, data = diet12)
 ```
 
 Степени свободы в результатах теста дробные! Дело в том, что мы провели не совсем "настоящий"
@@ -422,7 +461,7 @@ t-тест, а его очень близкую альтернативу под 
 Но если его хочется отключить, то нужно поставить `var.equal = TRUE`.
 
 ```{r}
-t.test(weight6weeks ~ Diet, data = diet12, paired = FALSE, var.equal = TRUE)
+t.test(weight6weeks ~ Diet, data = diet12, var.equal = TRUE)
 ```
 
 
@@ -431,15 +470,8 @@ t.test(weight6weeks ~ Diet, data = diet12, paired = FALSE, var.equal = TRUE)
 Чтобы подсчет *p-value* был корректным, некоторые допущения должны быть
 выполнены.
 
-1.  **Непрерывные** **Нормальное распределение** 
-Если размер выборки больше 28 (30, 50), то обычно игнорируют.
-
-тест Шапиро-Уилка на нормальность распределения:
-
-```{r}
-shapiro.test(samp)
-```
-или проверять визуально с помощью гистограммы или Q-Q plot. 
+1.  **Непрерывные** данные, **Нормальное распределение** 
+    Если размер выборки больше 28 (30, 50), то обычно игнорируют.
 
 2.  Для двувыборочного независимого t-теста выборки должны быть взяты из
     распределения **с одинаковыми дисперсиями**. Однако это не так
@@ -458,45 +490,98 @@ shapiro.test(samp)
     простого среднего по всем остальным значениям. Это значит, что
     допущение о независимости нарушено.
 
-### Упражнение
+Нормальность распределения можно оценивать количественно с помощью теста Шапиро-Уилка:
 
-"Vowel duration and aspiration effects in Icelandic”, Stefano Coretta, University of York, 2016 [link](https://osf.io/6au2k/). В диссертации тестируется ряд гипотез:  
+```{r}
+shapiro.test(samp)
+# H0: data is normal
+# p-value < 0.05 => отвергаем H0 (распределение данных значительно отклоняется от нормального)
+```
+
+или оценивать данные визуально с помощью гистограммы или Q-Q plot. 
+
+```{r}
+suppressWarnings(library(DescTools))
+PlotQQ(samp)
+#hist(samp)
+```
+
+Q-Q plot (квантильная диаграмма) строится путем построения точек с координатами, соответствующим их квантилям (теоретические квантилии против наблюдаемых в выборке).  
+* если точки лежат на диагонали, все в порядке  
+* если наблюдаются тяжелые "хвосты" по углам, то данные распределены ненормально (или данных очень мало)  
+* лесенка -- данные округлены или дискретные  
+* змейка -- skewed data  
+* график также позволяет увидеть выбросы - единичные точки  
+
+Аналогично с использованием `ggplot`:
+
+```{r}
+ggplot(mtcars, aes(sample = mpg)) +
+  stat_qq() +
+  stat_qq_line() +
+  theme_light()
+```
+
+### Упражнение 2
+
+Данные из работы "Vowel duration and aspiration effects in Icelandic”, Stefano Coretta, University of York, 2016 [link](https://osf.io/6au2k/). В диссертации тестируется ряд гипотез:  
 Voicing effect: vowels are longer than followed by voiced consonants;    
 Aspiration effect: vowels followed by pre-aspirated (geminate) stops are shorter than vowels followed by unaspirated (geminate) stops.  
 
-Есть ли статистически значимая разница между round and unrounded times?
-Есть ли статистически значимая разница между vowel.dur и roundness times? 
-$H_0: mean(round\_times) = mean(unrounded\_times)$
-$H_1: mean(round\_times) \ne mean(unrounded\_times)$ 
+Давайте проверим, есть ли статистически значимая разница в средних значениях переменной times в условиях roundness = "round" и "unrounded"?
+Есть ли статистически значимая разница между средними значениями vowel.dur в тех же условиях? 
 
-```{r}
+1. Сформулируйте нулевую и альтернативную гипотезы:
+$H_0: mean(....)  =  mean(....)$
+$H_1: mean(....) \ne mean(....)$ 
+
+2. Исследуйте данные с помощью боксплота, сформулируйте выводы после визуальной оценки.  
+
+```{r Icelandic2}
 library("tidyverse")
-dat <- read.csv("https://bit.ly/39Fr0gD")
-dat %>% slice_head(n=4)
+icelandic <- read.csv("https://bit.ly/39Fr0gD")
 
-ggplot(data = dat, aes(x = vowel.dur, y = roundness)) +
-  geom_boxplot(notch=TRUE) + # CI around the median +/- 1.58*IQR/sqrt(n)
-  theme_minimal()
 
-round_times <- dat %>%
-  filter(roundness == "round") %>%
-  select(time)
-round_times %>% count()
-
-unrounded_times <- dat %>%
-  filter(roundness == "unrounded") %>%
-  select(time)
-unrounded_times %>% count()
-
-t.test(round_times, unrounded_times, paired = FALSE)
 ```
+
+3. Создайте два вектора, round_times и unrounded_times, сравните их длину.  
+
+```{r Icelandic3}
+# round_times <- icelandic |>
+
+
+# unrounded_times <- icelandic |>
+
+
+```
+
+4. Определитесь с типом t-теста, проведите его и интерпретируйте. 
+
+```{r Icelandic4}
+
+
+```
+5. Сформулируйте вывод (не забудьте аргументировать их результатами теста). 
+
+```{text Icelandic5}
+
+
+```
+
+6. Повторите анализ, чтобы ответить на второй вопрос (Есть ли статистически значимая разница между средними значениями vowel.dur в тех же условиях?)
+
+```{r Icelandic6}
+
+
+```
+
 p-value = 0.3359 = 33% [0,1]
 $\alpha = 5%$
 p-value > 5%
 ==> не можем отвергнуть нулевую гипотезу 
 
 Согласно t-критерию Стьюдента (t = -0.9631, df = 589.36, p-value = 0.3359) нельзя отвергнуть нулевую гипотезу. Статистически значимой разницы между средними не найдено. Наши данные не дают возможности утверждать, что разница есть.
-Между долготой гласного, вероятно, нет разницы
+Между долготой гласного, вероятно, нет разницы.
 
 
 ## Непараметрические аналоги t-теста 
@@ -519,19 +604,20 @@ p-value > 5%
 она имеет такой же синтаксис, как и `t.test()`.
 
 ```{r}
-wilcox.test(weight ~ when, data = diet1_long, paired = TRUE)
+wilcox.test(diet1$pre.weight, diet1$weight6weeks, paired = TRUE)
 ```
 
 > Cообщение *"Есть совпадающие значения: не могу высчитать точное p-значение"* означает, что в ваших данных есть повторяющиеся значения, поэтому расчет p-value в данном случае --- это некоторая апроксимация. В большинстве случаев это сообщение можно игнорировать.
+
 
 ### Тест Манна-Уитни 
 
 Непараметрическим аналогом двустороннего *независимого* t-теста является
 **тест Манна-Уитни.** Для него тоже используется функция
-`wilcox.test()`, только в данном случае с параметром `paired = FALSE`.
+`wilcox.test()`, только с параметром по умолчанию `paired = FALSE`.
 
 ```{r}
-wilcox.test(weight ~ when, data = diet1_long, paired = FALSE)
+wilcox.test(weight6weeks ~ Diet, data = diet12)
 ```
 
 | Внутрииндивидуальный план         | Межиндивидуальный план             |
@@ -570,6 +656,7 @@ var(x, y) # функция дисперсии при двух переменны
 Значение ковариации привязано к исходной шкале данных. Много или мало - трудно сказать. 
 
 Корреляция - как сама связь между переменными, так и способ ее измерить. 
+
 
 ## Коэффициенты корреляции Пирсона и Спирмена/Кенделла 
 (Pearson's coefficient vs Spearman's and Kendall's coefficients) 
@@ -614,10 +701,10 @@ $$H_0: (\rho_{xy} = 0)$$
 library(Stat2Data)
 library(psych)
 data(Backpack)
-Backpack %>%
+Backpack |>
   mutate(backpack_kg = 0.45359237 * BackpackWeight,
-         body_kg = 0.45359237 * BodyWeight) %>%
-  select(body_kg, backpack_kg, Units, Year) %>%
+         body_kg = 0.45359237 * BodyWeight) |>
+  select(body_kg, backpack_kg, Units, Year) |>
 #cor()  
 #  psych::corr.test()
 #  psych::corr.test(adjust = "bonferroni")
@@ -711,7 +798,7 @@ cor.test(rx,ry) # Pearson on non-averaged (non-tied) ranks is Spearman-no-ties
 ```
 
 
-### Упражнение 
+### Упражнение 3
 
 Для работы возьмите датасет по рассказам А. П. Чехова (`chekhov.csv`, [link](https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/chekhov.csv)).
 
@@ -721,22 +808,17 @@ cor.test(rx,ry) # Pearson on non-averaged (non-tied) ranks is Spearman-no-ties
 
 1. Каков ваш прогноз, есть ли линейная связь между количеством слов (= длиной текста) и количеством уникальных слов?
 
-2. Постройте график рассеяния для этих переменных и проверьте вашу интуицию. Интерпретируйте данные на графике. 
+2. С помощью `ggplot` постройте график рассеяния для этих переменных и проверьте вашу интуицию. Используйте прозрачность alpha для лучшего понимания картины. Интерпретируйте данные на графике. 
 
 3. Используйте подходящий статистический критерий для проверки гипотезы о связи между значениями переменных `n_words` и `n_unique`: сформулируйте нулевую гипотезу, протестируйте ее и сформулируйте выводы.
 
 ```{r}
-chekhov <- read_csv("https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/chekhov.csv") %>%
+chekhov <- read_csv("https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/chekhov.csv") |>
   dplyr::select(n_words, n_unique)
-str(chekhov)
-skimr::skim(chekhov)
-# ggplot(chekhov, aes(...)) +
-#  geom_point(alpha = 0.3)  
 
-# Visual test for normality: 
-suppressWarnings(library(DescTools))
-PlotQQ(chekhov$n_unique)
+
 ```
+
 
 ### Misc
 
@@ -771,7 +853,7 @@ for (n in 1:num_points) {
     x[n]=r*cos(theta)
     y[n]=r*sin(theta)
 }
-data.frame(x,y) %>%
+data.frame(x,y) |>
 ggplot(aes(x, y)) +
   geom_point()
 

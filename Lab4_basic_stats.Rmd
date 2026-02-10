@@ -33,12 +33,13 @@ head(vec, 20)
 plot(vec,dnorm(vec))
 plot(vec,pnorm(vec))
 pnorm(80, mean=120, sd=15)
+?pnorm
 ```
 Теперь с помощью ggplot2, изменим среднее и стандартное отклонение. 
 
 ```{r}
 p <- tibble(x = 1:100,
-       PDF = dnorm(x = x, mean = 20, sd = 5)) %>% 
+       PDF = dnorm(x = x, mean = 50, sd = 5)) %>% 
   ggplot(aes(x, PDF))+
   geom_point()+
   geom_line()+
@@ -116,6 +117,10 @@ vowels %>%
        x = "длительность гласного (мс)",
        y = "значение функции плотности")
 
+studentnames <- c(5,7,7,5,5,7,4,6,5,9,7)
+mean(studentnames, trim = 0.15)
+median(studentnames)
+
 studentnames <- as_tibble(c(5,7,7,5,5,7,4,6,5,9,7))
 studentnames1 <- as_tibble(c(5,7,7,4,4,4,3,6,4,5,4))
 studentnames1 %>%
@@ -128,6 +133,9 @@ studenttime %>%
   geom_histogram(fill='green') +
   theme_classic()
 
+v <- seq(0, 3, 0.01)
+plot(v, df(v, df1 = 4, df2 = 10))
+?stats::df
 ```
 ```{r}
 mean(vowels$dur)
@@ -137,6 +145,20 @@ studentnames <- as_tibble(c(5,7,7,5,5,7,4,6,5,9,7))
 studentnames %>%
    count(value, sort=T)
 ```
+```{r}
+vowels |>
+  ggplot(aes(type, dur)) +
+  geom_boxplot(notch = TRUE) +
+  theme_bw()
+
+vowels |>
+  filter(type %in% c("b","w")) |>
+  ggplot(aes(type, dur)) +
+  geom_boxplot(notch = TRUE) +
+  theme_bw()
+
+```
+
 
 ## Reference
 
