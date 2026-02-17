@@ -514,7 +514,7 @@ grades %>%
 ```
 
 Шпаргалка по ANOVA:
-* https://www.krigolsonteaching.com/uploads/4/3/8/4/43848243/r_coding_cheat_sheet.pdf  
+* https://github.com/olesar/2026davR-hse-CL/blob/main/papers/r_coding_cheat_sheet.pdf  
 
 О величине эффекта, η2 и partial η2:
 * https://www.toposbooks.gr/behavioralstats/Levine_Hullett_2002.pdf  
