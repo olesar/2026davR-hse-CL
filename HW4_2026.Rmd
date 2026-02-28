@@ -82,7 +82,7 @@ Subjective Comment > Evidential > Size > Length
 
 #### Данные
 
-Загрузите данные из [файла](https://raw.githubusercontent.com/olesar/2025dav4compling/refs/heads/main/data/greek-word-order-mono-acceptability-coded-rt.txt") в переменную `mono`, переведя строковые данные в факторы. В переменной `mono_socio` сохраните данные социолингвистической [анкеты](https://raw.githubusercontent.com/olesar/2025dav4compling/refs/heads/main/data/greek-word-order-mono-acceptability-coded-rt.txt), также переведя строковые данные в факторы.
+Загрузите данные из [файла](https://raw.githubusercontent.com/olesar/2025dav4compling/refs/heads/main/data/greek-word-order-mono-acceptability-coded-rt.txt") в переменную `mono`, переведя строковые данные в факторы. В переменной `mono_socio` сохраните данные социолингвистической [анкеты](https://raw.githubusercontent.com/olesar/2025dav4compling/refs/heads/main/data/greek-word-order-mono_socio.txt), также переведя строковые данные в факторы.
 
 ```{r loaddata}
 #YOUR CODE HERE 
