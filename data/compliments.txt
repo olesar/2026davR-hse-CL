@@ -1,0 +1,7 @@
+Compliment responses	Male	Female
+Appreciation token	100	69
+Comment Acceptance	48	54
+Praise Upgrade	22	39
+Comment History	10	9
+Return	35	40
+Non-Agreement	27	27
