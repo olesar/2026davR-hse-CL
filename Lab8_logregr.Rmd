@@ -6,53 +6,57 @@ date: "07.04.2026"
 library(tidyverse)
 ```
 
-### 1. Background statistics
+### 1. Статистика под капотом  
 
-Variable types
+Типы переменных
 
-* numeric
-* categorical
+* числовые
+* категориальные
 
-What do we know:
+Что нам известно:
 
-* Confidence intervals (numeric variable)
-* Fisher test (categorical by categorical)
-* Simple linear regression (numeric by one numeric variable)
-* Linear regression with dummy variables (numeric by any variable)
+* Доверительные интервалы (числовая переменная)  
+* Критерий Фишера (категориальная переменная)  
+* Простая линейная регрессия (числовая переменная на одну числовую переменную)  
+* Линейная регрессия с дамми-переменными (числовая переменная на любую (т. е. числовую или категориальную) переменную)  
+* H0 для линейной регрессии - значение коэффициента независимой переменной равно 0  
+* Доверительный интервал коэффициента независимой переменной не должен пересекать 0  
 
-Today:
+Основные регрессии на сегодня:  
+* Множественная линейная регрессия (числовая переменная на несколько числовых переменных)  
+* Множественная линейная регрессия с дамми-переменными (числовая переменная на числовые или категориальные переменные)  
+* Логистическая (логит) регрессия (бинарная зависимая переменная на любое количество переменных любого типа)  
 
-* Multiple linear regression (numeric by several numeric variables)
-* Multiple linear regression with dummy variables (numeric by any variable)
-* Logistic (logit) regression (binary dependent variable by any number of variables of any type)
 
-### 2.1 How does it work
-Logistic or logit regression was developed in [Cox 1958]. It is a regression model wich predicts binary dependent variable using any number of variables of any type.
+### 2.1 Как это работает  
 
-What do we need?
+Логистическая и логит-регрессия [Cox 1958] -- это регрессионная модель, которая предсказывает категориальную зависимую переменную, используя любое количество переменных любого типа.
+Бинарная логистическая регрессия предсказывает бинарную зависимую переменную (YES -- NO, TRUE -- FALSE, успех -- провал).
+
+Что нам нужно? Для линейной модели:
 
 $$\underbrace{y_i}_{[-\infty, +\infty]}=\underbrace{\beta_0+\beta_1\cdot x_1+\beta_2\cdot x_2 + \dots +\beta_z\cdot x_z +\epsilon_i}_{[-\infty, +\infty]}$$
 
-But in our case $y$ is a binary variable.
+Но в нашем случае $y$  -- это бинарная переменная.
 
-* Probability?
+* вероятность?
 
 $$P(y) = \frac{\mbox{# successes}}{\mbox{# failures} + \mbox{# successes}}; P(y) \in [0, 1]$$
 
-* Odds?
+* отношение шансов?
 
 $$odds(y) = \frac{P(y)}{1-P(y)} = \frac{\mbox{P(successes)}}{\mbox{P(failures)}} = \frac{\mbox{# successes}}{\mbox{# failures}}; odds(y) \in [0, +\infty]$$
 
-* Natural logarithm of odds
+* натуральный логарифм отношения шансов
 
 $$\log(odds(y)) \in [-\infty, +\infty]$$
 
-### 2.2 Reminder about logarithms
+### 2.2 Вспоминаем свойства логарифмов  
 
 ```{r, echo = FALSE}
 data.frame(x = c(1:10*0.1, 1:10),
            log = log(c(1:10*0.1, 1:10))) %>%
-  mutate(zero = ifelse(x >= 1, "x ??? 1", "x < 1")) %>% 
+  mutate(zero = ifelse(x >= 1, "x > 1", "x < 1")) %>% 
   ggplot(aes(x, log, color = zero))+
   geom_line()+
   geom_point()+
@@ -61,11 +65,14 @@ data.frame(x = c(1:10*0.1, 1:10),
   theme_bw()
 ```
 
-* if log(odds) are greater then 0, it means that we have more successes than failures;
-* if log(odds) is equal to 0, it means that we have the same number of successes and failures;
-* if log(odds) are less then 0, it means that we have less successes than failures;
+* если log(odds) больше 0, это означает, что у нас больше успехов, чем провалов;
 
-### 2.3 Probability and log(odds)
+* если log(odds) равно 0, это означает, что у нас одинаковое количество успехов и провалов;
+
+* если log(odds) меньше 0, это означает, что у нас меньше успехов, чем провалов;
+
+
+### 2.3 Вероятности и log(odds)
 ```{r, echo=FALSE}
 data.frame(s = 0:10, f = 10:0) %>% 
   mutate(`P(s)` = s/(s+f),
@@ -76,9 +83,11 @@ data.frame(s = 0:10, f = 10:0) %>%
 $$\log(odds(s)) = \log\left(\frac{\#s}{\#f}\right)$$
 $$P(s) = \frac{\exp(\log(odds(s)))}{1+\exp(\log(odds(s)))}$$
 
-Results of the logistic regression can be easily converted to probabilities.
+Результаты логистической регрессии легко можно преобразовать в вероятности.
 
-### 2.4 Sigmoid
+### 2.4 Сигмоидная функция 
+
+или связывающая функция логит-регрессии.  
 
 ```{r, echo=FALSE}
 data.frame(s = -60:60*0.1) %>% 
@@ -89,11 +98,11 @@ data.frame(s = -60:60*0.1) %>%
   theme_bw()
 ```
 
-Formula for this sigmoid is the following:
+Формула для этой сигмоидной функции выглядит следующим образом:
 
 $$y = \frac{1}{1+e^{-x}}$$
 
-Feeting our logistic regression we should be able to reverse our sigmoid:
+С помощью логистической регрессии мы сможем обратно преобразовать нашу сигмоидную функцию:
 
 ```{r, echo=FALSE}
 data.frame(s = -60:60*0.1) %>% 
@@ -104,11 +113,11 @@ data.frame(s = -60:60*0.1) %>%
   theme_bw()
 ```
 
-Formula for this sigmoid is the following:
+Формула для этой сигмоидной функции выглядит следующим образом:
 
 $$y = \frac{1}{1+e^{-(-x)}} = \frac{1}{1+e^{x}}$$
 
-Feeting our logistic regression we should be able to move center of our sigmoid to the left/right side:
+С помощью логистической регрессии мы сможем сместить центр нашей сигмоидной функции влево/вправо:
 
 ```{r, echo=FALSE}
 data.frame(s = -60:60*0.1) %>% 
@@ -119,11 +128,11 @@ data.frame(s = -60:60*0.1) %>%
   theme_bw()
 ```
 
-Formula for this sigmoid is the following:
+Формула для этой сигмоидной функции со смещением значения `x` на 2 выглядит как:
 
 $$y = \frac{1}{1+e^{-(x-2)}}$$
 
-Feeting our logistic regression we should be able to squeeze/stretch center of our sigmoid:
+С помощью логистической регрессии мы сможем также сжать/растянуть центральную часть нашей сигмоидной функции:
 
 ```{r, echo=FALSE}
 data.frame(s = -60:60*0.1) %>% 
@@ -136,17 +145,19 @@ data.frame(s = -60:60*0.1) %>%
 
 $$y = \frac{1}{1+e^{-4x}}$$
 
-So the more general formula will be:
+Таким образом, общая формула будет:
+
 $$y = \frac{1}{1+e^{-k(x-z)}}$$
 
-where
+где
 
-* depending on $x$ values sigmoid can be reversed
-* $k$ is squeeze/stretch coefficient
-* $z$ is coefficient that indicates movement of the sigmoid center to the left or right side
+* в зависимости от значений $x$ сигмоидная функция может поворачиваться зеркально     
+* $k$ -- это сжимающий/растягивающий коэффициент  
+* $z$ -- это коэффициент, который позволяет сдвинуть центр сигмоиды влево или вправо  
 
-### 3. Numeric 
-Посмотрим, верно ли, чт языки с абруптивными звуками имеют в среднем больше согласных. Будем использовать данные из фонологической базы LAPSyD: http://goo.gl/0btfKa.
+
+### 3. Логистическая регрессия в R  
+Посмотрим, верно ли, что языки с абруптивными звуками имеют в среднем больше согласных. Будем использовать данные из фонологической базы LAPSyD: http://goo.gl/0btfKa.
 
 ```{r}
 ej_cons <- read.csv("http://goo.gl/0btfKa")  |>
@@ -270,7 +281,7 @@ __AIC__ (Akaike Information Criterion) --  показатель модели (go
 
 Взаимодействие происходит, когда влияние одного предиктора на результат зависит от значения другого предиктора. Взаимодействие двух предикторов может быть положительным (сочетание их значений усиливает эффект) или отрицательным (сочетание их значений уменьшает эффект).
 Пример: одушевленность и семантический класс; одушевленность и выбор синтаксической конструкции; влияние переходности глаголов в разных языковых вариантах.  
-<img src="https://web.archive.org/web/20250206093537/https://stats.oarc.ucla.edu/wp-content/uploads/2016/02/prob_dif.png" width=600>
+<img src="images/interaction_prob_dif.png" width=600>
 
 ### 8. Заключение: Обобщенные линейные модели (GLM)  
 
